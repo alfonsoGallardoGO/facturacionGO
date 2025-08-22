@@ -14,7 +14,9 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-aws-s3-v3": "3.0",
         "league/oauth1-client": "^1.11",
+        "maennchen/zipstream-php": "^3.1",
         "netsuitephp/netsuite-laravel": "^1.0",
         "spatie/laravel-permission": "^6.21",
         "tightenco/ziggy": "^2.0"

@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\SpacesFolderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

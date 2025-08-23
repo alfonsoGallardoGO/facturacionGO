@@ -60,6 +60,19 @@ return [
             'report' => false,
         ],
 
+        'spaces' => [
+            'driver' => 's3',
+            'key' => env('SPACES_KEY'),
+            'secret' => env('SPACES_SECRET'),
+            'region' => env('SPACES_REGION', 'sfo3'),
+            'bucket' => env('SPACES_BUCKET'),
+            'url' => env('SPACES_URL'),
+            'endpoint' => 'https://sfo3.digitaloceanspaces.com',
+            'use_path_style_endpoint' => false,
+            'throw' => true,
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

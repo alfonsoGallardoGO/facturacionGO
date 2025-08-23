@@ -32,11 +32,11 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/plantas', [PlantaController::class, 'byUser'])->name('plantas');
+    
 });
 
-Route::get('/xml-table', function () {
-    return Inertia::render('Xml/Table');
-})->name('/xml-table');
+Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('xml-table');
+
 
 Route::get('/spaces/test-download', function (Request $request) {
     $path = $request->query('path');

@@ -38,7 +38,6 @@ Route::get('/spaces/test-download', function (Request $request) {
     $path = $request->query('path');
     abort_if(empty($path), 400, 'Falta ?path=');
 
-    // Reutiliza la lógica de presign (pega aquí mismo si quieres)
     $s3 = new S3Client([
         'version' => 'latest',
         'region' => env('SPACES_REGION', 'sfo3'),

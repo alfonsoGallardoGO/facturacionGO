@@ -20,6 +20,7 @@ const model = ref([
             {
                 label: "XML",
                 icon: "pi pi-fw pi-file",
+                to: "/xml-table",
             },
         ],
     },

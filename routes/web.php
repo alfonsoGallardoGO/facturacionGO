@@ -35,6 +35,10 @@ Route::middleware([
     Route::get('/plantas', [PlantaController::class, 'byUser'])->name('plantas');
 });
 
+Route::get('/xml-table', function () {
+    return Inertia::render('Xml/Table');
+})->name('/xml-table');
+
 
 //Route::get('/plantas', [PlantaController::class, 'byUser'])->name('plantas');
 //Route::get('/planta/usuario', [EmpleadoController::class, 'getPlantaEmpleado'])->name('planta.usuario');

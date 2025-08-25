@@ -35,7 +35,7 @@ Route::middleware([
     
 });
 
-Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('xml-table');
+Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('/xml-table');
 
 
 Route::get('/spaces/test-download', function (Request $request) {

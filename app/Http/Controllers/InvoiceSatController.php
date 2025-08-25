@@ -39,7 +39,7 @@ class InvoiceSatController
         $categories = InvoiceCategory::all();
         $articles = InvoiceArticles::all();
         $accountingLists = InvoiceAccountingList::all();
-        $invoices = InvoiceSat::select('id', 'emisor_name', 'emisor_rfc', 'trandate', 'total', 'xml_path', 'pdf_path')
+        $invoices = InvoiceSat::select('id', 'emisor_name', 'emisor_rfc', 'trandate', 'total', 'xml_path', 'pdf_path', 'send_status')
                                 ->where('branch_office_id', 1)->get();
 
         return Inertia::render('Xml/Table', [

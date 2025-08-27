@@ -4,6 +4,8 @@ import { useLayout } from "./composables/layout";
 import { Link, router } from "@inertiajs/vue3";
 import axios from "axios";
 import { usePlantaStore } from "@/Stores/planta";
+
+const { initTheme } = useLayout();
 const plantaStore = usePlantaStore();
 
 const op = ref();
@@ -38,6 +40,9 @@ onMounted(async () => {
     plantasCopy.value = plantasDB.data;
 
     plantaStore.seleccionar(JSON.parse(localStorage.getItem("selectedPlanta")));
+
+    // restaurar tema
+    initTheme();
 });
 </script>
 

@@ -32,12 +32,11 @@ const currencyFormatter = new Intl.NumberFormat('es-MX', {
 });
 
 const downloadFile = (path) => {
-    console.log(`/spaces/test-download?path=${encodeURIComponent(path)}`);
     if (!path) {
         alert("No hay archivo disponible");
         return;
     }
-    window.location.href = `/spaces/test-download?path=${encodeURIComponent(path)}`;
+    window.location.href = `/spaces/test-download?path=sat_xml/${encodeURIComponent(path)}`;
 };
 
 const getStatusIcon = (state) => {
@@ -51,10 +50,10 @@ const getStatusIcon = (state) => {
 
 const getStatusColor = (state) => {
     switch(state) {
-        case 'pending': return 'text-yellow-500'; // color amarillo
-        case 'error': return 'text-red-500';       // color rojo
-        case 'correct': return 'text-green-500';   // color verde
-        default: return 'text-gray-400';           // gris para unknown
+        case 'pending': return 'text-yellow-500';
+        case 'error': return 'text-red-500';
+        case 'correct': return 'text-green-500';
+        default: return 'text-gray-400';
     }
 };
 
@@ -64,6 +63,30 @@ const statusLabels = {
     correct: 'Correcto',
     default: 'Desconocido',
 };
+
+const formatProviderType = (invoice_provider_type) => {
+    if (invoice_provider_type == 8345) return "Caja chica";
+    if (invoice_provider_type == 8244) return "Varios";
+    if (invoice_provider_type == 12185) return "Viaticos";
+    return "";
+};
+
+const formatType = (efecto_comprobante) => {
+    if (efecto_comprobante == 'P') return "Pago";
+    if (efecto_comprobante == 'I') return "Ingreso";
+    if (efecto_comprobante == 'E') return "Egreso";
+    if (efecto_comprobante == 'N') return "Nomina";
+    return "X";
+};
+
+const formatStatus = (status) => {
+    if (status == 1) return "Vigente";
+    if (status == 0) return "Cancelado";
+    return "";
+};
+
+// Vigente
+// Cancelado
 
 console.log(props.invoices);
 
@@ -99,7 +122,7 @@ console.log(props.invoices);
                 :rows="10"
                 :filters="filters"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[5, 10, 25, 50, 100, products.length]"
+                :rowsPerPageOptions="[5, 10, 25, 50, 100, props.invoices.length]"
                 currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros"
                 removableSort
                 resizableColumns 
@@ -164,33 +187,45 @@ console.log(props.invoices);
                         ></i>
                     </template>
                 </Column>
-                <Column sortable field="empresa" header="Empresa" />
+                <Column sortable field="company_name" header="Empresa" />
                 <Column sortable field="uuid" header="Uuid" />
                 <Column sortable field="emisor_rfc" header="Emisor RFC" />
                 <Column sortable field="emisor_name" header="Emisor Nombre" />
                 <Column sortable field="trandate" header="Fecha de emisión" />
-                <Column sortable field="fecha_certificacion" header="Fecha de certificación" />
-                <Column sortable field="pac_certifico" header="PAC que Certificó" />
+                <Column sortable field="trandate_cer" header="Fecha de certificación" />
+                <Column sortable field="rfc_pac" header="PAC que Certificó" />
                 <Column sortable field="total" header="Importe">
                     <template #body="slotProps">
                         {{ currencyFormatter.format(slotProps.data.total) }}
                     </template>
                 </Column>
-                <Column sortable field="fecha_cancelacion" header="Fecha de cancelación" />
-                <Column sortable field="no_orden" header="No de Orden" />
+                <Column sortable field="trandate_cancel" header="Fecha de cancelación" />
+                <Column sortable field="order_id" header="No de Orden" />
                 <Column sortable field="categoria" header="Categoría" />
                 <Column sortable field="ubicacion" header="Ubicación" />
                 <Column sortable field="departamento" header="Departamento" />
                 <Column sortable field="clase" header="Clase" />
-                <Column sortable field="notas" header="Notas" />
+                <Column sortable field="notes" header="Notas" />
                 <Column sortable field="termino" header="Término" />
                 <Column sortable field="importacion" header="Importación" />
                 <Column sortable field="articulo" header="Artículo" />
                 <Column sortable field="exclusion" header="Exclusión" />
-                <Column sortable field="proveedor_generico" header="Proveedor genérico" />
+                <Column sortable field="invoice_provider_type" header="Proveedor genérico">
+                    <template #body="slotProps">
+                        {{ formatProviderType(slotProps.data.invoice_provider_type) }}
+                    </template>
+                </Column>
                 <Column sortable field="tipo_operacion" header="Tipo de operación" />
-                <Column sortable field="tipo" header="Tipo" />
-                <Column sortable field="estatus" header="Estado" />
+                <Column sortable field="efecto_comprobante" header="Tipo">
+                    <template #body="slotProps">
+                        {{ formatType(slotProps.data.efecto_comprobante) }}
+                    </template>
+                </Column>
+                <Column sortable field="status" header="Estado">
+                    <template #body="slotProps">
+                        {{ formatStatus(slotProps.data.status) }}
+                    </template>
+                </Column>
             </DataTable>
     </AppLayout>
 </template>

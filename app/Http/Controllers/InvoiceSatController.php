@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Services\NetSuiteRestService;
 use Inertia\Inertia;
 
@@ -39,8 +40,47 @@ class InvoiceSatController
         $categories = InvoiceCategory::all();
         $articles = InvoiceArticles::all();
         $accountingLists = InvoiceAccountingList::all();
-        $invoices = InvoiceSat::select('id', 'emisor_name', 'emisor_rfc', 'trandate', 'total', 'xml_path', 'pdf_path', 'send_status')
-                                ->where('branch_office_id', 1)->get();
+        $invoices = InvoiceSat::select(
+            'invoice_sats.id',
+            'invoice_sats.emisor_name',
+            'invoice_sats.emisor_rfc',
+            'invoice_sats.trandate',
+            DB::raw('DATE(trandate_cer) as trandate_cer'),
+            'invoice_sats.total',
+            'invoice_sats.xml_path',
+            'invoice_sats.pdf_path',
+            'invoice_sats.send_status',
+            'invoice_sats.uuid',
+            'invoice_sats.rfc_pac',
+            'invoice_sats.trandate_cancel',
+            'invoice_sats.order_id',
+            'invoice_sats.notes',
+            'invoice_sats.invoice_provider_type',
+            'invoice_sats.efecto_comprobante',
+            'invoice_sats.status',
+            'invoice_companies.name as company_name',
+            'invoice_categories.name as categoria',
+            'invoice_locations.name as ubicacion',
+            'invoice_departments.name as departamento',
+            'invoice_classes.name as clase',
+            'invoice_terms.name as termino',
+            'invoice_accounting_lists.name as importacion',
+            'invoice_articles.name as articulo',
+            'invoice_exclusion_categories.name as exclusion',
+            'invoice_operation_types.name as tipo_operacion'
+        )
+        ->leftJoin('invoice_companies', 'invoice_companies.id', '=', 'invoice_sats.invoice_company_id')
+        ->leftJoin('invoice_categories', 'invoice_categories.id', '=', 'invoice_sats.invoice_category_id')
+        ->leftJoin('invoice_locations', 'invoice_locations.id', '=', 'invoice_sats.invoice_location_id')
+        ->leftJoin('invoice_departments', 'invoice_departments.id', '=', 'invoice_sats.invoice_department_id')
+        ->leftJoin('invoice_classes', 'invoice_classes.id', '=', 'invoice_sats.invoice_class_id')
+        ->leftJoin('invoice_terms', 'invoice_terms.id', '=', 'invoice_sats.invoice_term_id')
+        ->leftJoin('invoice_accounting_lists', 'invoice_accounting_lists.id', '=', 'invoice_sats.invoice_accounting_id')
+        ->leftJoin('invoice_articles', 'invoice_articles.id', '=', 'invoice_sats.invoice_article_id')
+        ->leftJoin('invoice_exclusion_categories', 'invoice_exclusion_categories.id', '=', 'invoice_sats.invoice_exclusion_category_id')
+        ->leftJoin('invoice_operation_types', 'invoice_operation_types.id', '=', 'invoice_sats.invoice_operation_type_id')
+        ->where('invoice_sats.branch_office_id', 13)
+        ->get();
 
         return Inertia::render('Xml/Table', [
             'invoices' => $invoices,

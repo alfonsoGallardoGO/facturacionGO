@@ -50,3 +50,11 @@
         <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
     </body>
 </html>
+<script>
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.documentElement.classList.add("app-dark", "mode-dark");
+    } else {
+        document.documentElement.classList.remove("app-dark", "mode-dark");
+    }
+</script>

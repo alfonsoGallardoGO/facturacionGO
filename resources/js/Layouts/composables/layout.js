@@ -4,7 +4,7 @@ const layoutConfig = reactive({
     preset: "Aura",
     primary: "emerald",
     surface: null,
-    darkTheme: false,
+    darkTheme: localStorage.getItem("theme") === "dark",
     menuMode: "static",
 });
 
@@ -37,6 +37,9 @@ export function useLayout() {
         layoutConfig.darkTheme = !layoutConfig.darkTheme;
         document.documentElement.classList.toggle("app-dark");
         document.documentElement.classList.toggle("mode-dark");
+
+        // persistir preferencia
+        localStorage.setItem("theme", layoutConfig.darkTheme ? "dark" : "light");
     };
 
     const toggleMenu = () => {
@@ -64,6 +67,19 @@ export function useLayout() {
 
     const getSurface = computed(() => layoutConfig.surface);
 
+    const initTheme = () => {
+        const saved = localStorage.getItem("theme");
+        const currentIsDark = layoutConfig.darkTheme;
+
+        if (saved) {
+            if (saved === "dark" && !currentIsDark) {
+                executeDarkModeToggle(true);
+            } else if (saved === "light" && currentIsDark) {
+                executeDarkModeToggle(false);
+            }
+        }
+    };
+
     return {
         layoutConfig,
         layoutState,
@@ -74,5 +90,6 @@ export function useLayout() {
         getSurface,
         setActiveMenuItem,
         toggleDarkMode,
+        initTheme,
     };
 }

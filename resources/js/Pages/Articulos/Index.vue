@@ -21,7 +21,7 @@ const articlesDialog = ref(false);
 const submitted = ref(false);
 
 const first = ref(0);
-const rows = ref(6);
+const rows = ref(9);
 
 const pagedArticles = computed(() => {
     const start = first.value;
@@ -32,6 +32,7 @@ const pagedArticles = computed(() => {
 const openNew = () => {
     articles.name = "";
     articles.code = "";
+    articles.id = null;
     articlesDialog.value = true;
 };
 
@@ -96,19 +97,22 @@ console.log(props.articles);
 </script>
 
 <template>
-    <AppLayout :title="'Listas de Contabilidad'">
-        <div class="card">
-            <Toolbar class="mb-6">
-                <template #start>
-                    <Button
-                        label="Añadir Articulo"
-                        icon="pi pi-plus"
-                        class="mr-2"
-                        @click="openNew"
-                    />
-                </template>
-            </Toolbar>
+    <AppLayout :title="'Articulos'">
+        <Toolbar class="mb-6 px-10">
+            <template #start>
+                <h2 class="mb-0">Articulos</h2>
+            </template>
 
+            <template #end>
+                <Button
+                    label="Añadir Articulo"
+                    icon="pi pi-plus"
+                    class="mr-2"
+                    @click="openNew"
+                />
+            </template>
+        </Toolbar>
+        <div class="card">
             <div class="grid grid-cols-3 gap-4">
                 <div v-for="list in pagedArticles" :key="list.id" class="">
                     <Card>

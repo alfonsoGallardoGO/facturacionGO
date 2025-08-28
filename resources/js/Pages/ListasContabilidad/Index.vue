@@ -21,7 +21,7 @@ const listDialog = ref(false);
 const submitted = ref(false);
 
 const first = ref(0);
-const rows = ref(6);
+const rows = ref(9);
 
 const pagedLists = computed(() => {
     const start = first.value;
@@ -32,6 +32,7 @@ const pagedLists = computed(() => {
 const openNew = () => {
     accountList.name = "";
     accountList.code = "";
+    accountList.id = null;
     listDialog.value = true;
 };
 
@@ -97,18 +98,20 @@ console.log(props.accountingLists);
 
 <template>
     <AppLayout :title="'Listas de Contabilidad'">
+        <Toolbar class="mb-6 px-10">
+            <template #start>
+                <h2 class="mb-0">Listas de Contabilidad</h2>
+            </template>
+            <template #end>
+                <Button
+                    label="Añadir Lista"
+                    icon="pi pi-plus"
+                    class="mr-2"
+                    @click="openNew"
+                />
+            </template>
+        </Toolbar>
         <div class="card">
-            <Toolbar class="mb-6">
-                <template #start>
-                    <Button
-                        label="Añadir Lista"
-                        icon="pi pi-plus"
-                        class="mr-2"
-                        @click="openNew"
-                    />
-                </template>
-            </Toolbar>
-
             <div class="grid grid-cols-3 gap-4">
                 <div v-for="list in pagedLists" :key="list.id" class="">
                     <Card>

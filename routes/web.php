@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\InvoiceAccountingListController;
 use App\Http\Controllers\InvoiceArticlesController;
+use App\Http\Controllers\InvoiceCategoryController;
+use App\Http\Controllers\InvoiceCompanyController;
+use App\Http\Controllers\InvoiceLocationController;
 use App\Http\Controllers\PlantaController;
+use App\Models\InvoiceCompany;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -44,7 +48,27 @@ Route::middleware([
     Route::post('/articulos', [InvoiceArticlesController::class, 'store'])->name('articulos.store');
     Route::delete('/articulos/{invoiceArticles}', [InvoiceArticlesController::class, 'destroy'])->name('articulos.destroy');
     Route::put('/articulos/{invoiceArticles}', [InvoiceArticlesController::class, 'update'])->name('articulos.update');
+
+    Route::get('/categoria-facturas', [InvoiceCategoryController::class, 'index'])->name('/categoria-facturas');
+    Route::post('/categoria-facturas', [InvoiceCategoryController::class, 'store'])->name('categoria-facturas.store');
+    Route::delete('/categoria-facturas/{invoiceCategory}', [InvoiceCategoryController::class, 'destroy'])->name('categoria-facturas.destroy');
+    Route::put('/categoria-facturas/{invoiceCategory}', [InvoiceCategoryController::class, 'update'])->name('categoria-facturas.update');
+    Route::post('/categoria-facturas/delete-multiple', [InvoiceCategoryController::class, 'deleteMultiple'])->name('categoria-facturas.delete-multiple');
+
+    Route::get('/clases-facturacion', [App\Http\Controllers\InvoiceClassController::class, 'index'])->name('/clases-facturacion');
+    Route::post('/clases-facturacion', [App\Http\Controllers\InvoiceClassController::class, 'store'])->name('clases-facturacion.store');
+    Route::delete('/clases-facturacion/{invoiceClass}', [App\Http\Controllers\InvoiceClassController::class, 'destroy'])->name('clases-facturacion.destroy');
+    Route::put('/clases-facturacion/{invoiceClass}', [App\Http\Controllers\InvoiceClassController::class, 'update'])->name('clases-facturacion.update');
+    Route::post('/clases-facturacion/delete-multiple', [App\Http\Controllers\InvoiceClassController::class, 'deleteMultiple'])->name('clases-facturacion.delete-multiple');
+
+    Route::get('/empresas', [InvoiceCompanyController::class, 'index'])->name('/empresas');
+    Route::post('/empresas', [InvoiceCompanyController::class, 'store'])->name('empresas.store');
+    Route::delete('/empresas/{invoiceCompany}', [InvoiceCompanyController::class, 'destroy'])->name('empresas.destroy');
+    Route::put('/empresas/{invoiceCompany}', [InvoiceCompanyController::class, 'update'])->name('empresas.update');
+
+    Route::get('/ubicaciones', [InvoiceLocationController::class, 'index'])->name('/ubicaciones');
 });
+
 
 Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('xml-table');
 

@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InvoiceCategory extends Model
+class InvoiceCompany extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'invoice_categories';
+    protected $table = 'invoice_companies';
 
     protected $fillable = [
         'name',
         'code',
-        'description',
+        'account',
+        'currency',
+        'foreign_account',
+        'foreign_currency',
     ];
 }

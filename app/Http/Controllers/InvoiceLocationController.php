@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceLocation;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InvoiceLocationController
 {
@@ -12,7 +13,11 @@ class InvoiceLocationController
      */
     public function index()
     {
-        //
+        $locations = InvoiceLocation::join('invoice_companies', 'invoice_locations.invoice_company_id', '=', 'invoice_companies.id')
+            ->join('cities', 'invoice_locations.city_id', '=', 'cities.id')
+            ->select('invoice_locations.name', 'invoice_locations.code', 'invoice_companies.name as company_name', 'cities.name as city_name')
+            ->get();
+        return Inertia::render('Ubicaciones/Index', ['locations' => $locations]);
     }
 
     /**

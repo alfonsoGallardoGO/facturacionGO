@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceCategory;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InvoiceCategoryController
 {
@@ -12,7 +13,10 @@ class InvoiceCategoryController
      */
     public function index()
     {
-        //
+        $invoiceCategories = InvoiceCategory::all();
+        return Inertia('CategoriaFacturas/Index', [
+            'categories' => $invoiceCategories,
+        ]);
     }
 
     /**
@@ -28,7 +32,18 @@ class InvoiceCategoryController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'nullable|string|max:50',
+        ]);
+
+        InvoiceCategory::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->name,
+        ]);
+
+        return redirect()->route('/categoria-facturas')->with('success', 'Categoría de factura creada exitosamente.');
     }
 
     /**
@@ -44,7 +59,7 @@ class InvoiceCategoryController
      */
     public function edit(InvoiceCategory $invoiceCategory)
     {
-        //
+        
     }
 
     /**
@@ -52,7 +67,18 @@ class InvoiceCategoryController
      */
     public function update(Request $request, InvoiceCategory $invoiceCategory)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'nullable|string|max:50',
+        ]);
+
+        $invoiceCategory->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->name,
+        ]);
+
+        return redirect()->route('/categoria-facturas')->with('success', 'Categoría de factura actualizada exitosamente.');
     }
 
     /**
@@ -60,6 +86,17 @@ class InvoiceCategoryController
      */
     public function destroy(InvoiceCategory $invoiceCategory)
     {
-        //
+        $invoiceCategory->delete();
+        return redirect()->route('/categoria-facturas')->with('success', 'Categoría de factura eliminada exitosamente.');
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (!empty($ids)) {
+            InvoiceCategory::whereIn('id', $ids)->delete();
+            return redirect()->route('/categoria-facturas')->with('success', 'Categorías de factura eliminadas exitosamente.');
+        }
+        return redirect()->route('/categoria-facturas')->with('error', 'No se seleccionaron categorías para eliminar.');
     }
 }

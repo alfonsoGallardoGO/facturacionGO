@@ -37,6 +37,7 @@ import Tabs from "primevue/tabs";
 import TabList from "primevue/tablist";
 import Tab from "primevue/tab";
 import { createPinia } from "pinia";
+import "flag-icons/css/flag-icons.min.css";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 

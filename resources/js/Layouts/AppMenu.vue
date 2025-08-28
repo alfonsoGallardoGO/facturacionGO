@@ -27,6 +27,11 @@ const model = ref([
                 icon: "pi pi-fw pi-book",
                 to: "/listas-contabilidad",
             },
+            {
+                label: "Articulos",
+                icon: "pi pi-fw pi-warehouse",
+                to: "/articulos",
+            },
         ],
     },
     // {

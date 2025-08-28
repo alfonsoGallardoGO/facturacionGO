@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InvoiceAccountingListController;
+use App\Http\Controllers\InvoiceArticlesController;
 use App\Http\Controllers\PlantaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,10 @@ Route::middleware([
     Route::delete('/listas-contabilidad/{invoiceAccountingList}', [InvoiceAccountingListController::class, 'destroy'])->name('listas-contabilidad.destroy');
     Route::put('/listas-contabilidad/{invoiceAccountingList}', [InvoiceAccountingListController::class, 'update'])->name('listas-contabilidad.update');
 
+    Route::get('/articulos', [InvoiceArticlesController::class, 'index'])->name('/articulos');
+    Route::post('/articulos', [InvoiceArticlesController::class, 'store'])->name('articulos.store');
+    Route::delete('/articulos/{invoiceArticles}', [InvoiceArticlesController::class, 'destroy'])->name('articulos.destroy');
+    Route::put('/articulos/{invoiceArticles}', [InvoiceArticlesController::class, 'update'])->name('articulos.update');
 });
 
 Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('xml-table');

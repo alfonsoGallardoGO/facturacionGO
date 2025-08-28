@@ -35,6 +35,9 @@ Route::middleware([
     Route::get('/plantas', [PlantaController::class, 'byUser'])->name('plantas');
 
     Route::get('/listas-contabilidad', [InvoiceAccountingListController::class, 'index'])->name('/listas-contabilidad');
+    Route::post('/listas-contabilidad', [InvoiceAccountingListController::class, 'store'])->name('listas-contabilidad.store');
+    Route::delete('/listas-contabilidad/{invoiceAccountingList}', [InvoiceAccountingListController::class, 'destroy'])->name('listas-contabilidad.destroy');
+    Route::put('/listas-contabilidad/{invoiceAccountingList}', [InvoiceAccountingListController::class, 'update'])->name('listas-contabilidad.update');
 
 });
 

@@ -32,7 +32,17 @@ class InvoiceAccountingListController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:invoice_accounting_lists,code',
+        ]);
+
+        InvoiceAccountingList::create([
+            'name' => $request->name,
+            'code' => $request->code,
+        ]);
+
+        return redirect()->route('/listas-contabilidad')->with('success', 'Lista de contabilidad creada exitosamente.');
     }
 
     /**
@@ -56,7 +66,14 @@ class InvoiceAccountingListController
      */
     public function update(Request $request, InvoiceAccountingList $invoiceAccountingList)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:invoice_accounting_lists,code,' . $invoiceAccountingList->id,
+        ]);
+
+        $invoiceAccountingList->update($validatedData);
+        return redirect()->route('/listas-contabilidad')->with('success', 'Lista de contabilidad actualizada exitosamente.');
+
     }
 
     /**
@@ -64,6 +81,7 @@ class InvoiceAccountingListController
      */
     public function destroy(InvoiceAccountingList $invoiceAccountingList)
     {
-        //
+        $invoiceAccountingList->delete();
+        return redirect()->route('/listas-contabilidad')->with('success', 'Lista de contabilidad eliminada exitosamente.');
     }
 }

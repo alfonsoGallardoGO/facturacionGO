@@ -49,22 +49,24 @@ if (! function_exists('map_xml_costs')) {
                 ];
             })->all();
     }
-    if (! function_exists('map_xml_articles')) {
+    
+}
 
-        function map_xml_articles(array $data, InvoiceSat $invoiceSat): array
-        {
-            $article    = $invoiceSat->invoiceArticle?->code;
-            $accounting = $invoiceSat->invoiceAccountingList?->code;
+if (! function_exists('map_xml_articles')) {
 
-            return collect($data)
-                ->map(function ($item) use ($article, $accounting) {
-                    return [
-                        'landedcost' => $accounting,
-                        'articulo'   => $article,
-                        'cantidad'   => data_get($item, 'Cantidad')      ?? '0',
-                        'costo'      => data_get($item, 'ValorUnitario') ?? '0',
-                    ];
-                })->all();
-        }
+    function map_xml_articles(array $data, InvoiceSat $invoiceSat): array
+    {
+        $article    = $invoiceSat->invoiceArticle?->code;
+        $accounting = $invoiceSat->invoiceAccountingList?->code;
+
+        return collect($data)
+            ->map(function ($item) use ($article, $accounting) {
+                return [
+                    'landedcost' => $accounting,
+                    'articulo'   => $article,
+                    'cantidad'   => data_get($item, 'Cantidad')      ?? '0',
+                    'costo'      => data_get($item, 'ValorUnitario') ?? '0',
+                ];
+            })->all();
     }
 }

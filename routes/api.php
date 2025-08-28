@@ -10,3 +10,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/invoices/{invoiceSat}', [InvoiceSatController::class, 'sendNetsuite']);
+
+Route::get('/sat-download', [InvoiceSatController::class, 'descargaSat']);
+Route::get('/sat/verify/{requestId}', [InvoiceSatController::class, 'verificarSat']);

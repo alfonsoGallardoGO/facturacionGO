@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceAccountingList;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InvoiceAccountingListController
 {
@@ -12,7 +13,10 @@ class InvoiceAccountingListController
      */
     public function index()
     {
-        //
+        $accountingLists = InvoiceAccountingList::all();
+        return Inertia::render('ListasContabilidad/Index', [
+            'accountingLists' => $accountingLists
+        ]);
     }
 
     /**

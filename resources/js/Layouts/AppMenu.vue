@@ -22,6 +22,11 @@ const model = ref([
                 icon: "pi pi-fw pi-file",
                 to: "/xml-table",
             },
+            {
+                label: "Listas de Contabilidad",
+                icon: "pi pi-fw pi-book",
+                to: "/listas-contabilidad",
+            },
         ],
     },
     // {

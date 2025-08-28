@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceAccountingListController;
 use App\Http\Controllers\PlantaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +33,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/plantas', [PlantaController::class, 'byUser'])->name('plantas');
-    
+
+    Route::get('/listas-contabilidad', [InvoiceAccountingListController::class, 'index'])->name('/listas-contabilidad');
+
 });
 
 Route::get('/xml-table', [App\Http\Controllers\InvoiceSatController::class, 'index'])->name('xml-table');

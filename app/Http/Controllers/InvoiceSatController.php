@@ -11,6 +11,8 @@ use App\Models\InvoiceExclusionCategory;
 use App\Models\InvoiceLocation;
 use App\Models\InvoiceSat;
 use App\Models\InvoiceTerm;
+use App\Models\InvoiceOperationTypes;
+use App\Models\Planta;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -40,6 +42,8 @@ class InvoiceSatController
         $categories = InvoiceCategory::all();
         $articles = InvoiceArticles::all();
         $accountingLists = InvoiceAccountingList::all();
+        $operationTypes = InvoiceOperationTypes::all();
+        $plantas = Planta::all('code','id');
         $invoices = InvoiceSat::select(
             'invoice_sats.id',
             'invoice_sats.emisor_name',
@@ -80,7 +84,19 @@ class InvoiceSatController
         ->leftJoin('invoice_exclusion_categories', 'invoice_exclusion_categories.id', '=', 'invoice_sats.invoice_exclusion_category_id')
         ->leftJoin('invoice_operation_types', 'invoice_operation_types.id', '=', 'invoice_sats.invoice_operation_type_id')
         ->where('invoice_sats.branch_office_id', 13)
-        ->get();
+        ->get()
+        ->map(function ($invoice) {
+            $invoice->ready_to_netsuite =
+                $invoice->efecto_comprobante === 'I' &&
+                !$invoice->external_id &&
+                !$invoice->service_processing_at &&
+                !$invoice->service_ends_at &&
+                $invoice->xml_path &&
+                $invoice->pdf_path &&
+                !$invoice->trandate_cancel;
+
+            return $invoice;
+        });
 
         return Inertia::render('Xml/Table', [
             'invoices' => $invoices,
@@ -92,6 +108,8 @@ class InvoiceSatController
             'categories' => $categories,
             'articles' => $articles,
             'accountingLists' => $accountingLists,
+            'operationTypes' => $operationTypes,
+            'plantas' => $plantas,
         ]);
     }
 

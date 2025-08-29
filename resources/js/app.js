@@ -37,8 +37,50 @@ import Tabs from "primevue/tabs";
 import TabList from "primevue/tablist";
 import Tab from "primevue/tab";
 import { createPinia } from "pinia";
+import ConfirmationService from 'primevue/confirmationservice'
+import ConfirmDialog from 'primevue/confirmdialog'
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+
+const spanishLocale = {
+    startsWith: "Empieza con",
+    contains: "Contiene",
+    notContains: "No contiene",
+    endsWith: "Termina con",
+    equals: "Igual a",
+    notEquals: "No igual a",
+    noFilter: "Sin filtro",
+    filter: "Filtrar",
+    lt: "Menor que",
+    lte: "Menor o igual a",
+    gt: "Mayor que",
+    gte: "Mayor o igual a",
+    dateIs: "La fecha es",
+    dateIsNot: "La fecha no es",
+    dateBefore: "Fecha anterior",
+    dateAfter: "Fecha posterior",
+    clear: "Limpiar",
+    apply: "Aplicar",
+    matchAll: "Coincidir todo",
+    matchAny: "Coincidir cualquiera",
+    addRule: "Agregar regla",
+    removeRule: "Eliminar regla",
+    accept: "Aceptar",
+    reject: "Rechazar",
+    choose: "Elegir",
+    upload: "Subir",
+    cancel: "Cancelar",
+    firstDayOfWeek: 1,
+    dayNames: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],
+    dayNamesShort: ["dom","lun","mar","mié","jue","vie","sáb"],
+    dayNamesMin: ["D","L","M","X","J","V","S"],
+    monthNames: ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],
+    monthNamesShort: ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],
+    today: "Hoy",
+    clear: "Limpiar",
+    accept: "Aceptar",
+    reject: "Rechazar",
+};
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -106,6 +148,7 @@ createInertiaApp({
         app.use(plugin);
         app.use(ZiggyVue);
         app.use(PrimeVue, {
+            locale: spanishLocale,
             theme: {
                 preset: MyPreset,
                 options: {
@@ -140,6 +183,8 @@ createInertiaApp({
         app.component("TabList", TabList);
         app.component("Tab", Tab);
         app.use(createPinia());
+        app.use(ConfirmationService);
+        app.component('ConfirmDialog', ConfirmDialog);
         app.mount(el);
 
         if (typeof KTApp !== "undefined" && KTApp.init) {

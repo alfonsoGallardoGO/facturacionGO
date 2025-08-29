@@ -2,10 +2,50 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref, onMounted } from "vue";
 import { FilterMatchMode } from '@primevue/core/api';
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
 
-const products = ref([]);
+const confirm = useConfirm();
+const toast = useToast();
+
 const selectedProducts = ref([]);
 
+const allColumns = [
+    { field: 'acciones', header: 'Acciones', visible: true },
+    { field: 'send_status', header: 'Estado', visible: true },
+    { field: 'company_name', header: 'Empresa', visible: true },
+    { field: 'uuid', header: 'Uuid', visible: false },
+    { field: 'emisor_rfc', header: 'Emisor RFC', visible: true },
+    { field: 'emisor_name', header: 'Emisor Nombre', visible: true },
+    { field: 'trandate', header: 'Fecha de emisión', visible: true },
+    { field: 'trandate_cer', header: 'Fecha de certificación', visible: false },
+    { field: 'rfc_pac', header: 'PAC que Certificó', visible: false },
+    { field: 'total', header: 'Importe', visible: true },
+    { field: 'trandate_cancel', header: 'Fecha de cancelación', visible: false },
+    { field: 'order_id', header: 'No de Orden', visible: true },
+    { field: 'categoria', header: 'Categoría', visible: true },
+    { field: 'ubicacion', header: 'Ubicación', visible: true },
+    { field: 'departamento', header: 'Departamento', visible: true },
+    { field: 'clase', header: 'Clase', visible: true },
+    { field: 'notes', header: 'Notas', visible: true },
+    { field: 'termino', header: 'Término', visible: true },
+    { field: 'importacion', header: 'Importación', visible: true },
+    { field: 'articulo', header: 'Artículo', visible: true },
+    { field: 'exclusion', header: 'Exclusión', visible: true },
+    { field: 'invoice_provider_type', header: 'Proveedor genérico', visible: true },
+    { field: 'tipo_operacion', header: 'Tipo de operación', visible: true },
+    { field: 'efecto_comprobante', header: 'Tipo', visible: true },
+    { field: 'status', header: 'Estado', visible: true },
+];
+
+const selectedColumns = ref(allColumns.filter(col => col.visible));
+
+const onToggle = (val) => {
+    const selectedFields = val.map(c => c.field);
+    selectedColumns.value = allColumns.filter(col => selectedFields.includes(col.field));
+};
+
+// Funciones auxiliares
 const props = defineProps({
     terms: Array,
     locations: Array,
@@ -16,15 +56,13 @@ const props = defineProps({
     articles: Array,
     accountingLists: Array,
     invoices: Array,
+    operationTypes: Array,
+    plantas: Array,
 });
 
 const filters = ref({
     'global': {value: null, matchMode: FilterMatchMode.CONTAINS},
 });
-
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
 
 const currencyFormatter = new Intl.NumberFormat('es-MX', {
     style: 'currency',
@@ -85,32 +123,70 @@ const formatStatus = (status) => {
     return "";
 };
 
-// Vigente
-// Cancelado
+const sendToNetSuite = () => {
+    confirm.require({
+        message: '¿Estás seguro de que deseas continuar?',
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Cancelar',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Confirmar'
+        },
+        accept: () => {
+            toast.add({ severity: 'info', summary: 'Confirmado', detail: 'Has aceptado', life: 3000 });
+        },
+        reject: () => {
+            toast.add({ severity: 'error', summary: 'Rechazado', detail: 'Se rechazó la acción', life: 3000 });
+        }
+    });
+};
 
-console.log(props.invoices);
+const provider_type = ref([
+    { name: 'Caja chica', id: 8345 },
+    { name: 'Varios', id: 8244 },
+    { name: 'Viaticos', id: 12185 }
+]);
 
-// onMounted(async () => {
-//     try {
-//         const res = await fetch(
-//             "https://my.api.mockaroo.com/dtpv.json?key=a0e7b470",
-//             {
-//                 headers: {
-//                     Accept: "application/json",
-//                 },
-//             },
-//         );
-//         console.log(res);
-//         products.value = await res.json();
-//         console.log("Datos cargados:", products.value);
-//     } catch (error) {
-//         console.error("Error cargando datos:", error);
-//     }
-// });
+const status_envio = ref([
+    { name: 'Pendiente', id: 'pending' },
+    { name: 'Error', id: 'error' },
+    { name: 'Correctas', id: 'correct' },
+    { name: 'Canceladas', id: 'trandate_cancel' }
+]);
+const tipo_pago = ref([
+    { name: 'Pago', id: 'P' },
+    { name: 'Ingreso', id: 'I' },
+    { name: 'Egreso', id: 'E' },
+    { name: 'Nomina', id: 'N' }
+]);
+const selectedStatus = ref('pending');
+
+const selectedPlanta = ref(null);
+const storedPlanta = localStorage.getItem("selectedPlanta");
+if (storedPlanta) {
+    try {
+        const parsed = JSON.parse(storedPlanta);
+        selectedPlanta.value = parsed.id;
+    } catch (e) {
+        console.error("Error al parsear selectedPlanta:", e);
+    }
+}
+
+const visible_form = ref(false);
+const visible_filter = ref(false);
+
+// console.log(props.plantas);
+
 </script>
 
 <template>
     <AppLayout title="Tabla xml">
+    <Toast />
+    <ConfirmDialog></ConfirmDialog>
             <DataTable 
                 :value="props.invoices"
                 tableStyle="min-width: 50rem"
@@ -129,16 +205,34 @@ console.log(props.invoices);
                 columnResizeMode="fit"
             >
                 <Toolbar class="mb-6">
-                    <!-- <template #start>
-                        <Button label="New" icon="pi pi-plus" class="mr-2" @click="openNew" />
-                        <Button label="Delete" icon="pi pi-trash" severity="danger" variant="outlined"
-                            @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
-                    </template> -->
+                    <template #start>
+                        <div style="text-align:left">
+                            
+                        </div>
+                    </template>
 
                     <template #end>
-                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" customUpload
-                            chooseLabel="Import" class="mr-2" auto :chooseButtonProps="{ severity: 'secondary' }" /> -->
-                        <Button label="Exportar" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
+                        <Button
+                            label="Filtros"
+                            size="normal"
+                            icon="pi pi-filter"
+                            variant="outlined"
+                            class="me-2"
+                            severity="warn"
+                            @click="visible_filter = true"
+                        />
+                        <MultiSelect
+                            v-model="selectedColumns"
+                            :options="allColumns"
+                            optionLabel="header"
+                            display="hidden"
+                            :maxSelectedLabels="1"
+                            @update:modelValue="onToggle"
+                        >
+                            <template #value>
+                                <i class="pi pi-bars"></i>
+                            </template>
+                        </MultiSelect>
                     </template>
                 </Toolbar>
                 <template #header>
@@ -152,80 +246,337 @@ console.log(props.invoices);
                         </IconField>
                     </div>
                 </template>
+                <!-- Checkbox de selección -->
                 <Column selectionMode="multiple" headerStyle="width: 3rem" />
-                <Column sortable field="acciones" header="Acciones">
-                    <template #body="slotProps">
-                        <Button
-                            label="xml"
-                            size="small"
-                            icon="pi pi-file"
-                            variant="outlined"
-                            rounded
-                            class="mr-2"
-                            @click="downloadFile(slotProps.data.xml_path)"
-                        />
-                        <Button
-                            label="pdf"
-                            size="small"
-                            icon="pi pi-file-pdf"
-                            variant="outlined"
-                            rounded
-                            severity="danger"
-                            @click="downloadFile(slotProps.data.pdf_path)"
-                        />
-                    </template>
-                </Column>
-                <Column field="send_status" header="Estado">
-                    <template #body="slotProps">
-                        <i
-                        :class="[
-                            getStatusIcon(slotProps.data.send_status),
-                            getStatusColor(slotProps.data.send_status),
-                            'cursor-pointer'
-                        ]"
-                        :title="statusLabels[slotProps.data.send_status] || statusLabels.default"
-                        ></i>
-                    </template>
-                </Column>
-                <Column sortable field="company_name" header="Empresa" />
-                <Column sortable field="uuid" header="Uuid" />
-                <Column sortable field="emisor_rfc" header="Emisor RFC" />
-                <Column sortable field="emisor_name" header="Emisor Nombre" />
-                <Column sortable field="trandate" header="Fecha de emisión" />
-                <Column sortable field="trandate_cer" header="Fecha de certificación" />
-                <Column sortable field="rfc_pac" header="PAC que Certificó" />
-                <Column sortable field="total" header="Importe">
-                    <template #body="slotProps">
-                        {{ currencyFormatter.format(slotProps.data.total) }}
-                    </template>
-                </Column>
-                <Column sortable field="trandate_cancel" header="Fecha de cancelación" />
-                <Column sortable field="order_id" header="No de Orden" />
-                <Column sortable field="categoria" header="Categoría" />
-                <Column sortable field="ubicacion" header="Ubicación" />
-                <Column sortable field="departamento" header="Departamento" />
-                <Column sortable field="clase" header="Clase" />
-                <Column sortable field="notes" header="Notas" />
-                <Column sortable field="termino" header="Término" />
-                <Column sortable field="importacion" header="Importación" />
-                <Column sortable field="articulo" header="Artículo" />
-                <Column sortable field="exclusion" header="Exclusión" />
-                <Column sortable field="invoice_provider_type" header="Proveedor genérico">
-                    <template #body="slotProps">
-                        {{ formatProviderType(slotProps.data.invoice_provider_type) }}
-                    </template>
-                </Column>
-                <Column sortable field="tipo_operacion" header="Tipo de operación" />
-                <Column sortable field="efecto_comprobante" header="Tipo">
-                    <template #body="slotProps">
-                        {{ formatType(slotProps.data.efecto_comprobante) }}
-                    </template>
-                </Column>
-                <Column sortable field="status" header="Estado">
-                    <template #body="slotProps">
-                        {{ formatStatus(slotProps.data.status) }}
-                    </template>
-                </Column>
+
+                <!-- Columnas dinámicas -->
+                <template v-for="col in selectedColumns" :key="col.field">
+                    <Column :field="col.field" :header="col.header" sortable>
+                        <template v-if="col.field === 'acciones'" #body="slotProps">
+                            <Button
+                                label="xml"
+                                size="small"
+                                icon="pi pi-file"
+                                variant="outlined"
+                                rounded
+                                class="mr-2"
+                                @click="downloadFile(slotProps.data.xml_path)"
+                            />
+                            <Button
+                                label="pdf"
+                                size="small"
+                                icon="pi pi-file-pdf"
+                                variant="outlined"
+                                rounded
+                                class="mr-2"
+                                severity="danger"
+                                @click="downloadFile(slotProps.data.pdf_path)"
+                            />
+                            <!-- <Button
+                                label="editar"
+                                size="small"
+                                icon="pi pi-pencil"
+                                variant="outlined"
+                                rounded
+                                class="mr-2"
+                                severity="secondary"
+                                @click="visible_form = true"
+                            /> -->
+                            <Button
+                                v-if="slotProps.data.ready_to_netsuite"
+                                label="Enviar a netsuite"
+                                size="small"
+                                icon="pi pi-send"
+                                variant="outlined"
+                                rounded
+                                class="mr-2"
+                                severity="success"
+                                @click="visible_form = true"
+                            />
+                        </template>
+
+                        <template v-else-if="col.field === 'send_status'" #body="slotProps">
+                            <i
+                                :class="[getStatusIcon(slotProps.data.send_status), getStatusColor(slotProps.data.send_status), 'cursor-pointer']"
+                                :title="statusLabels[slotProps.data.send_status] || statusLabels.default"
+                            ></i>
+                        </template>
+
+                        <template v-else-if="col.field === 'total'" #body="slotProps">
+                            {{ currencyFormatter.format(slotProps.data.total) }}
+                        </template>
+
+                        <template v-else-if="col.field === 'invoice_provider_type'" #body="slotProps">
+                            {{ formatProviderType(slotProps.data.invoice_provider_type) }}
+                        </template>
+
+                        <template v-else-if="col.field === 'efecto_comprobante'" #body="slotProps">
+                            {{ formatType(slotProps.data.efecto_comprobante) }}
+                        </template>
+
+                        <template v-else-if="col.field === 'status'" #body="slotProps">
+                            {{ formatStatus(slotProps.data.status) }}
+                        </template>
+                    </Column>
+                </template>
+
             </DataTable>
     </AppLayout>
+
+    <!-- Modal Formulario -->
+    <Dialog v-model:visible="visible_form" modal header="Datos Factura" :style="{ width: '75rem' }">
+        <div class="card grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="col-span-4 md:col-span-2">
+                <label for="invoice_category_id" class="font-bold block mb-2">Categoría</label>
+                <Select 
+                    :options="props.categories"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_category_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Ubicación</label>
+                <Select 
+                    :options="props.locations"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_location_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Departamento</label>
+                <Select 
+                    :options="props.departments"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_department_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Clase</label>
+                <Select 
+                    :options="props.classes"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_class_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Término</label>
+                <Select 
+                    :options="props.terms"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_term_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Tipo de operación</label>
+                <Select 
+                    :options="props.operationTypes"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_operation_type_id"
+                    filter
+                    fluid 
+                    required/>
+            </div>
+            <Divider class="col-span-4"/>
+            <div class="col-span-4 md:col-span-1">
+                <label for="" class="font-bold block mb-2">No de Orden</label>
+                <InputText inputId="" fluid />
+            </div>
+            <div class="col-span-4 md:col-span-3">
+                <label for="" class="font-bold block mb-2">Importación</label>
+                <Select 
+                    :options="props.accountingLists"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_accounting_id"
+                    filter
+                    fluid />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Artículo</label>
+                <Select 
+                    :options="props.articles"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_article_id"
+                    filter
+                    fluid />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Exclusión</label>
+                <Select 
+                    :options="props.exclusions"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_exclusion_category_id"
+                    filter
+                    fluid />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Proveedor genérico</label>
+                <Select 
+                    :options="provider_type"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="invoice_provider_type"
+                    filter
+                    fluid />
+            </div>
+            <div class="col-span-4">
+                <label for="" class="font-bold block mb-2">Notas</label>
+                <Textarea rows="5" inputId="" fluid />
+            </div>
+        </div>
+        <div class="flex justify-end gap-2">
+            <Button type="button" icon="pi pi-times" label="Cancelar" severity="secondary" @click="visible_form = false"></Button>
+            <Button type="button" icon="pi pi-save" label="Guardar" @click="sendToNetSuite(slotProps.data)"></Button>
+        </div>
+    </Dialog>
+    
+    <!-- Modal Filtros -->
+    <Dialog v-model:visible="visible_filter" modal header="Filtros" :style="{ width: '75rem' }">
+        <div class="card grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Estado de envío</label>
+                <Select 
+                    v-model="selectedStatus"
+                    :options="status_envio"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="filtro_estado_envio"
+                    fluid 
+                />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Planta</label>
+                <Select 
+                    v-model="selectedPlanta"
+                    :options="props.plantas"
+                    optionLabel="code"
+                    optionValue="id"
+                    inputId="filtro_planta"
+                    showClear
+                    fluid 
+                />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Fechas</label>
+                <DatePicker 
+                    v-model="dates" 
+                    selectionMode="range" 
+                    :manualInput="false" 
+                    :numberOfMonths="2" 
+                    showButtonBar 
+                    dateFormat="dd/mm/yy" 
+                    inputId="filtro_fechas"
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Efecto comprobante</label>
+                <Select 
+                    v-model="selectedPlanta"
+                    :options="tipo_pago"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="filtro_efecto_comprobante"
+                    showClear
+                    fluid 
+                />
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <label for="" class="font-bold block mb-2">Excluidos</label>
+                <Select 
+                    v-model="valor"
+                    :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
+                    optionLabel="label"
+                    optionValue="value"
+                    inputId="filtro_excluidos"
+                    showClear
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <label for="" class="font-bold block mb-2">Estado vigencia</label>
+                <Select 
+                    v-model="valor"
+                    :options="[{ label: 'Vigente', value: 1 }, { label: 'Cancelado', value: 0 }]"
+                    optionLabel="label"
+                    optionValue="value"
+                    inputId="filtro_estado"
+                    showClear
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <label for="" class="font-bold block mb-2">Con XML?</label>
+                <Select 
+                    v-model="valor"
+                    :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
+                    optionLabel="label"
+                    optionValue="value"
+                    inputId="filtro_xml"
+                    showClear
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <label for="" class="font-bold block mb-2">Con PDF?</label>
+                <Select 
+                    v-model="valor"
+                    :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
+                    optionLabel="label"
+                    optionValue="value"
+                    inputId="filtro_pdf"
+                    showClear
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Departamento</label>
+                <Select 
+                    :options="props.departments"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="filtro_departamento"
+                    filter
+                    showClear
+                    fluid
+                />
+            </div>
+            <div class="col-span-4 md:col-span-2">
+                <label for="" class="font-bold block mb-2">Clase</label>
+                <Select 
+                    :options="props.classes"
+                    optionLabel="name"
+                    optionValue="id"
+                    inputId="filtro_clase"
+                    filter
+                    showClear
+                    fluid 
+                />
+            </div>
+        </div>
+        <div class="flex justify-end gap-2">
+            <Button type="button" icon="pi pi-times" label="Cancelar" severity="secondary" @click="visible_filter = false"></Button>
+            <Button type="button" icon="pi pi-replay" label="Restablecer" severity="help" @click="visible_filter = false"></Button>
+            <Button type="button" icon="pi pi-filter" label="Aplicar filtros" @click="visible_filter = false"></Button>
+        </div>
+    </Dialog>
 </template>
+

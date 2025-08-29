@@ -1,4 +1,5 @@
 import { computed, reactive } from "vue";
+import { watchEffect } from "vue";
 
 const layoutConfig = reactive({
     preset: "Aura",
@@ -40,6 +41,8 @@ export function useLayout() {
 
         // persistir preferencia
         localStorage.setItem("theme", layoutConfig.darkTheme ? "dark" : "light");
+        localStorage.setItem("data-bs-theme", layoutConfig.darkTheme ? "dark" : "light");
+        localStorage.setItem("data-bs-theme-mode", layoutConfig.darkTheme ? "dark" : "light");
     };
 
     const toggleMenu = () => {
@@ -79,6 +82,16 @@ export function useLayout() {
             }
         }
     };
+
+    watchEffect(() => {
+        const isDark = layoutConfig.darkTheme;
+
+        document.documentElement.classList.toggle("app-dark", isDark);
+        document.documentElement.classList.toggle("mode-dark", isDark);
+        document.documentElement.setAttribute("data-bs-theme", isDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-bs-theme-mode", isDark ? "dark" : "light");
+        document.documentElement.setAttribute("themePreference", isDark ? "dark" : "light");
+    });
 
     return {
         layoutConfig,

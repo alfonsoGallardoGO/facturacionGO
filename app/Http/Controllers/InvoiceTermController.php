@@ -12,7 +12,8 @@ class InvoiceTermController
      */
     public function index()
     {
-        //
+        $terms = InvoiceTerm::all();
+        return inertia('Terminos/Index', ['terms' => $terms]);
     }
 
     /**
@@ -28,7 +29,18 @@ class InvoiceTermController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:invoice_terms,code',
+        ]);
+
+        InvoiceTerm::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => null,
+        ]);
+
+        return redirect()->route('/terminos-pago')->with('success', 'Termino de pago creado exitosamente.');
     }
 
     /**
@@ -52,7 +64,18 @@ class InvoiceTermController
      */
     public function update(Request $request, InvoiceTerm $invoiceTerm)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:invoice_terms,code,'.$invoiceTerm->id,
+        ]);
+
+        $invoiceTerm->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => null,
+        ]);
+
+        return redirect()->route('/terminos-pago')->with('success', 'Termino de pago actualizado exitosamente.');
     }
 
     /**
@@ -60,6 +83,8 @@ class InvoiceTermController
      */
     public function destroy(InvoiceTerm $invoiceTerm)
     {
-        //
+        $invoiceTerm->delete();
+
+        return redirect()->route('/terminos-pago')->with('success', 'Termino de pago eliminado exitosamente.');
     }
 }

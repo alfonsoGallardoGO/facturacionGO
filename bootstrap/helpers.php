@@ -6,10 +6,10 @@ if (! function_exists('map_xml_costs')) {
 
     function map_xml_costs(array $data, InvoiceSat $invoiceSat): array
     {
-        $location     = $invoiceSat->invoiceLocation?->code;
-        $category     = $invoiceSat->invoiceCategory?->code;
-        $department   = $invoiceSat->invoiceDepartment?->code;
-        $invoiceClass = $invoiceSat->invoiceClass?->code;
+        $location     = 509;
+        $category     = 100;
+        $department   = 103;
+        $invoiceClass = 7;
 
         return collect($data)
             ->map(function ($item) use ($category, $location, $department, $invoiceClass) {

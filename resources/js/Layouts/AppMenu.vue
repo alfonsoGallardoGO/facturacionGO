@@ -49,14 +49,16 @@ const model = ref([
             },
             {
                 label: "Ubicaciones",
-                icon: "pi pi-fw pi-map-marker",
+                icon: "pi pi-fw pi-building",
                 to: "/ubicaciones",
+            },
+            {
+                label: "Terminos de Pago",
+                icon: "pi pi-fw pi-money-bill",
+                to: "/terminos-pago",
             },
         ],
     },
-    // {
-    //     label: "Portales",
-    // },
 ]);
 </script>
 

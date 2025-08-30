@@ -5,8 +5,10 @@ use App\Http\Controllers\InvoiceArticlesController;
 use App\Http\Controllers\InvoiceCategoryController;
 use App\Http\Controllers\InvoiceCompanyController;
 use App\Http\Controllers\InvoiceLocationController;
+use App\Http\Controllers\InvoiceTermController;
 use App\Http\Controllers\PlantaController;
 use App\Models\InvoiceCompany;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -14,6 +16,10 @@ use Inertia\Inertia;
 use Aws\S3\S3Client;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -28,7 +34,10 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard'); // Inertia busca en 'resources/js/pages/Dashboard.vue'
+        $usersCount = User::count();
+        return Inertia::render('Dashboard', 
+            ['users' => $usersCount]
+        ); // Inertia busca en 'resources/js/pages/Dashboard.vue'
     })->name('/dashboard');
 });
 
@@ -67,6 +76,14 @@ Route::middleware([
     Route::put('/empresas/{invoiceCompany}', [InvoiceCompanyController::class, 'update'])->name('empresas.update');
 
     Route::get('/ubicaciones', [InvoiceLocationController::class, 'index'])->name('/ubicaciones');
+    Route::post('/ubicaciones', [InvoiceLocationController::class, 'store'])->name('ubicaciones.store');
+    Route::delete('/ubicaciones/{invoiceLocation}', [InvoiceLocationController::class,'destroy'])->name('ubicaciones.destroy');
+    Route::put('/ubicaciones/{invoiceLocation}', [InvoiceLocationController::class,'update'])->name('ubicaciones.update');
+
+    Route::get('/terminos-pago', [InvoiceTermController::class, 'index'])->name('/terminos-pago');
+    Route::post('/terminos-pago', [InvoiceTermController::class, 'store'])->name('terminos-pago.store');
+    Route::delete('/terminos-pago/{invoiceTerm}', [InvoiceTermController::class,'destroy'])->name('terminos-pago.destroy');
+    Route::put('/terminos-pago/{invoiceTerm}', [InvoiceTermController::class,'update'])->name('terminos-pago.update');
 });
 
 

@@ -7,23 +7,23 @@ import { useToastService } from "../../Stores/toastService.js"; // importar para
 const { showSuccess, showError } = useToastService();
 
 const props = defineProps({
-    articles: Array,
+    terms: Array,
 });
 
-const articles = useForm({
+const term = useForm({
     name: "",
     code: "",
 });
 
 const search = ref("");
 
-const selectedAccountingLists = ref([]);
-const deleteArticleDialog = ref(false);
-const articlesDialog = ref(false);
+const deleteTermDialog = ref(false);
+const termDialog = ref(false);
 const submitted = ref(false);
 
 const first = ref(0);
 const rows = ref(9);
+
 const normalize = (s) =>
     (s ?? "")
         .toString()
@@ -32,10 +32,10 @@ const normalize = (s) =>
         .toLowerCase();
 
 const filteredLists = computed(() => {
-    if (!search.value) return props.articles;
+    if (!search.value) return props.terms;
 
     const q = normalize(search.value);
-    return props.articles.filter((item) => {
+    return props.terms.filter((item) => {
         return (
             normalize(item.name).includes(q) || normalize(item.code).includes(q)
         );
@@ -64,28 +64,28 @@ watch([rows, filteredLists], () => {
 });
 
 const openNew = () => {
-    articles.name = "";
-    articles.code = "";
-    articles.id = null;
-    articlesDialog.value = true;
+    term.name = "";
+    term.code = "";
+    term.id = null;
+    termDialog.value = true;
 };
 
-const editArticles = (list) => {
-    articles.name = list.name;
-    articles.code = list.code;
-    articles.id = list.id;
-    articlesDialog.value = true;
+const editTerm = (list) => {
+    term.name = list.name;
+    term.code = list.code;
+    term.id = list.id;
+    termDialog.value = true;
 };
 
-const saveArticle = () => {
+const saveTerm = () => {
     submitted.value = true;
 
-    if (articles.name && articles.code) {
-        if (articles.id) {
-            articles.put(`/articulos/${articles.id}`, {
+    if (term.name && term.code) {
+        if (term.id) {
+            term.put(`/terminos-pago/${term.id}`, {
                 onSuccess: () => {
-                    articlesDialog.value = false;
-                    articles.reset();
+                    termDialog.value = false;
+                    term.reset();
                     showSuccess();
                     submitted.value = false;
                 },
@@ -95,10 +95,10 @@ const saveArticle = () => {
                 },
             });
         } else {
-            articles.post("/articulos", {
+            term.post("/terminos-pago", {
                 onSuccess: () => {
-                    articlesDialog.value = false;
-                    articles.reset();
+                    termDialog.value = false;
+                    term.reset();
                     showSuccess();
                     submitted.value = false;
                 },
@@ -111,12 +111,12 @@ const saveArticle = () => {
     }
 };
 
-const deleteArticle = () => {
+const deleteTerm = () => {
     submitted.value = true;
-    articles.delete(`/articulos/${articles.id}`, {
+    term.delete(`/terminos-pago/${term.id}`, {
         onSuccess: () => {
-            deleteArticleDialog.value = false;
-            articles.reset();
+            deleteTermDialog.value = false;
+            term.reset();
             showSuccess();
             submitted.value = false;
         },
@@ -127,19 +127,18 @@ const deleteArticle = () => {
     });
 };
 
-console.log(props.articles);
+console.log(props.terms);
 </script>
 
 <template>
-    <AppLayout :title="'Articulos'">
+    <AppLayout :title="'Términos de Pago'">
         <Toolbar class="mb-6 px-10">
             <template #start>
-                <h2 class="mb-0">Articulos</h2>
+                <h2 class="mb-0">Terminos de pago</h2>
             </template>
-
             <template #end>
                 <Button
-                    label="Añadir Articulo"
+                    label="Añadir Termino"
                     icon="pi pi-plus"
                     class="mr-2"
                     @click="openNew"
@@ -178,9 +177,9 @@ console.log(props.articles);
                                     class="w-full"
                                     icon="pi pi-trash"
                                     @click="
-                                        ((deleteArticleDialog = true),
-                                        (articles.id = list.id),
-                                        (articles.name = list.name))
+                                        ((deleteTermDialog = true),
+                                        (term.id = list.id),
+                                        (term.name = list.name))
                                     "
                                 />
                                 <Button
@@ -188,7 +187,7 @@ console.log(props.articles);
                                     severity="warn"
                                     icon="pi pi-pencil"
                                     class="w-full"
-                                    @click="editArticles(list)"
+                                    @click="editTerm(list)"
                                 />
                             </div>
                         </template>
@@ -203,25 +202,25 @@ console.log(props.articles);
             />
 
             <Dialog
-                v-model:visible="articlesDialog"
+                v-model:visible="termDialog"
                 :style="{ width: '450px' }"
-                header="Añadir o Editar Articulo"
+                header="Añadir o Editar Termino de Pago"
                 :modal="true"
             >
                 <div class="flex flex-col gap-6">
                     <div>
                         <label for="name" class="block font-bold mb-3"
-                            >Articulo</label
+                            >Termino de pago</label
                         >
                         <InputText
                             id="name"
-                            v-model.trim="articles.name"
+                            v-model.trim="term.name"
                             required="true"
                             autofocus
-                            :invalid="submitted && !articles.name"
+                            :invalid="submitted && !term.name"
                             fluid
                         />
-                        <small v-if="articles.errors.name" class="text-red-500"
+                        <small v-if="term.errors.name" class="text-red-500"
                             >El nombre es requerido</small
                         >
                     </div>
@@ -231,13 +230,13 @@ console.log(props.articles);
                         >
                         <InputText
                             id="code"
-                            v-model.trim="articles.code"
+                            v-model.trim="term.code"
                             required
-                            :invalid="submitted && !articles.code"
+                            :invalid="submitted && !term.code"
                             fluid
                         />
 
-                        <small v-if="articles.errors.code" class="text-red-500"
+                        <small v-if="term.errors.code" class="text-red-500"
                             >El codigo no es valido.</small
                         >
                     </div>
@@ -248,19 +247,19 @@ console.log(props.articles);
                         label="Cancelar"
                         icon="pi pi-times"
                         text
-                        @click="articlesDialog = false"
+                        @click="termDialog = false"
                     />
                     <Button
                         label="Guardar"
                         icon="pi pi-check"
-                        @click="saveArticle"
+                        @click="saveTerm"
                         :loading="submitted"
                     />
                 </template>
             </Dialog>
 
             <Dialog
-                v-model:visible="deleteArticleDialog"
+                v-model:visible="deleteTermDialog"
                 :style="{ width: '450px' }"
                 header="Confirm"
                 :modal="true"
@@ -268,8 +267,8 @@ console.log(props.articles);
                 <div class="flex items-center gap-4">
                     <i class="pi pi-exclamation-triangle !text-3xl" />
                     <span
-                        >Estas seguro que deseas eliminar la lista de
-                        contabilidad <b>{{ articles.name }}</b
+                        >Estas seguro que deseas eliminar el termino de pago
+                        <b>{{ term.name }}</b
                         >?</span
                     >
                 </div>
@@ -278,14 +277,14 @@ console.log(props.articles);
                         label="No"
                         icon="pi pi-times"
                         text
-                        @click="deleteArticleDialog = false"
+                        @click="deleteTermDialog = false"
                         severity="secondary"
                         variant="text"
                     />
                     <Button
                         label="Si"
                         icon="pi pi-check"
-                        @click="deleteArticle"
+                        @click="deleteTerm"
                         severity="danger"
                         :loading="submitted"
                     />

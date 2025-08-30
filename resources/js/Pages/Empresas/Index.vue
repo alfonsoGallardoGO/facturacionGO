@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { useForm } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useToastService } from "../../Stores/toastService.js"; // importar para llamar a los mensajes globales
 
 const { showSuccess, showError } = useToastService();
@@ -28,6 +28,8 @@ const currencies = ref([
     { country: "gb", code: "GBP", symbol: "£", label: "Libra esterlina" },
 ]);
 
+const search = ref("");
+
 const selectedEmpresas = ref([]);
 const deleteEmpresasDialog = ref(false);
 const empresasDialog = ref(false);
@@ -36,10 +38,48 @@ const submitted = ref(false);
 const first = ref(0);
 const rows = ref(9);
 
+const normalize = (s) =>
+    (s ?? "")
+        .toString()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase();
+
+const filteredLists = computed(() => {
+    if (!search.value) return props.empresas;
+
+    const q = normalize(search.value);
+    return props.empresas.filter((item) => {
+        return (
+            normalize(item.name).includes(q) ||
+            normalize(item.code).includes(q) ||
+            normalize(item.account).includes(q) ||
+            normalize(item.currency).includes(q) ||
+            normalize(item.foreign_account).includes(q) ||
+            normalize(item.foreign_currency).includes(q)
+        );
+    });
+});
+
 const pagedLists = computed(() => {
     const start = first.value;
     const end = start + rows.value;
-    return props.empresas.slice(start, end);
+    return filteredLists.value.slice(start, end);
+});
+
+const totalRecords = computed(() => filteredLists.value.length);
+
+function onSearch() {
+    first.value = 0;
+}
+
+function onPage(e) {
+    first.value = e.first;
+    rows.value = e.rows;
+}
+
+watch([rows, filteredLists], () => {
+    if (first.value >= totalRecords.value) first.value = 0;
 });
 
 const openNew = () => {
@@ -134,12 +174,29 @@ console.log(props.empresas);
             </template>
         </Toolbar>
         <div class="card border-none">
+            <div class="flex justify-content-end mb-4">
+                <IconField>
+                    <InputIcon>
+                        <i class="pi pi-search" />
+                    </InputIcon>
+                    <InputText
+                        placeholder="Buscar..."
+                        v-model="search"
+                        @input="onSearch"
+                        fluid
+                    />
+                </IconField>
+            </div>
             <div class="grid grid-cols-3 gap-4">
                 <div v-for="list in pagedLists" :key="list.id" class="">
                     <Card>
                         <template #title
                             >{{ list.name }}
-
+                            <Tag
+                                severity="info"
+                                class="mr-2"
+                                :value="'Codigo: ' + list.code"
+                            ></Tag>
                             <div class="mt-5">
                                 <Tag
                                     icon="pi pi-id-card"
@@ -200,10 +257,12 @@ console.log(props.empresas);
                     </Card>
                 </div>
             </div>
+
             <Paginator
-                v-model:first="first"
-                v-model:rows="rows"
-                :totalRecords="props.empresas.length"
+                :first="first"
+                :rows="rows"
+                :totalRecords="totalRecords"
+                @page="onPage"
             />
 
             <Dialog

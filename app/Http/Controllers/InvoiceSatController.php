@@ -184,13 +184,13 @@ class InvoiceSatController
             'moneda'        => data_get($meta_x, 'Moneda'),
             'termino'       => $invoiceSat?->invoice_term_id ?? '',
             'departamento'  => $invoiceSat?->invoice_department_id ?? '',
-            'clase'         => $invoiceSat?->invoice_class_id ?? '',
-            'operacion'     => $invoiceSat?->invoice_operation_type_id ?? '',
+            'clase'         => 1,
+            'operacion'     => 1,
             'tipocambio'    => $invoiceSat?->exchange_rate,
             //            'fecha'         => Carbon::parse(data_get($meta_xml, 'Complemento.TimbreFiscalDigital.FechaTimbrado'))->format('d/m/Y'),
             'fecha'      => Carbon::parse($invoiceSat->trandate)->format('d/m/Y'),
             'ubicacion'  => $invoiceSat?->invoice_location_id ?? '',
-            'idnetsuite' => $invoiceSat->order_id ?? '',
+            'idnetsuite' => '',
             'uuid'       => $invoiceSat->uuid,
             'gastos'     => $costs,
             'articulos'  => [],
@@ -200,7 +200,7 @@ class InvoiceSatController
             'pdf'        => $pdfBase64,
         ];
 
-        return $data;
+        //return $data;
 
         if ($invoiceSat->invoice_article_id || $invoiceSat->invoice_accounting_id) {
             $articles          = map_xml_articles(data_get($meta_x, 'Conceptos.Concepto'), $invoiceSat);

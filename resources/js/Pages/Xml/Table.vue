@@ -60,7 +60,8 @@ const props = defineProps({
     invoices: Array,
     operationTypes: Array,
     plantas: Array,
-    sesion: Object,
+    plantaEmpleado: Number,
+    plantaActual: Number,
 });
 
 const filters = ref({
@@ -170,17 +171,9 @@ const visible_form = ref(false);
 const visible_filter = ref(false);
 
 // Filtros ===================================
+const filtrosAplicandose = ref(false);
 const selectedStatus = ref('pending');
-const selectedPlanta = ref(null);
-const storedPlanta = localStorage.getItem("selectedPlanta");
-if (storedPlanta) {
-    try {
-        const parsed = JSON.parse(storedPlanta);
-        selectedPlanta.value = parsed.id;
-    } catch (e) {
-        console.error("Error al parsear selectedPlanta:", e);
-    }
-}
+const selectedPlanta = ref(props.plantaActual ?? props.plantaEmpleado ?? null);
 const selectedTipo = ref(null);
 const selectedXml = ref(null);
 const selectedPdf = ref(null);
@@ -256,8 +249,40 @@ const filteredInvoices = computed(() => {
     })
 })
 
+const activeRequests = ref(0)
+
+// Toast para filtros
+function startFiltering() {
+    if (activeRequests.value === 0) {
+        toast.add({
+            severity: 'info',
+            summary: 'Filtros',
+            detail: 'Aplicando filtros...',
+            life: 999999,
+            group: 'filtros'
+        })
+    }
+    activeRequests.value++
+}
+
+function finishFiltering(success = true) {
+    activeRequests.value--
+    if (activeRequests.value <= 0) {
+        activeRequests.value = 0
+        toast.removeGroup('filtros')
+        toast.add({
+            severity: success ? 'success' : 'error',
+            summary: 'Filtros',
+            detail: success ? 'Filtros aplicados con éxito' : 'Hubo un error al aplicar los filtros',
+            life: 3000
+        })
+    }
+}
+
 const loadInvoices = () => {
-    const [start, end] = dates.value ?? [];
+    startFiltering()
+
+    const [start, end] = dates.value ?? []
 
     router.get(route('/xml-table'), {
         planta: selectedPlanta.value,
@@ -266,18 +291,46 @@ const loadInvoices = () => {
             end.toISOString().slice(0, 10)
         ] : null,
     }, {
-        preserveState: true, // mantiene filtros y UI
-        replace: true,       // evita duplicar historial
-    });
-};
+        preserveState: true,
+        replace: true,
+        onFinish: () => finishFiltering(true),
+        onError: () => finishFiltering(false)
+    })
+}
+
 
 watch([selectedPlanta, dates], () => {
     loadInvoices();
 });
 
-onMounted(() => {
-    loadInvoices();
-});
+watch(
+    [selectedStatus, selectedTipo, selectedExcluidos, selectedVigencia, selectedXml, selectedPdf, selectedDepartamento, selectedClase],
+    () => {
+        startFiltering()
+        setTimeout(() => finishFiltering(true), 300)
+    }
+)
+
+const resetFiltros = () => {
+    // Ocultar panel
+    visible_filter.value = false;
+
+    // Resetear filtros correctamente
+    selectedStatus.value = 'pending';
+    selectedPlanta.value = props.plantaActual ?? props.plantaEmpleado ?? null;
+    dates.value = [startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })];
+    selectedTipo.value = null;
+    selectedExcluidos.value = null;
+    selectedVigencia.value = null;
+    selectedXml.value = null;
+    selectedPdf.value = null;
+    selectedDepartamento.value = null;
+    selectedClase.value = null;
+}
+
+// onMounted(() => {
+//     loadInvoices();
+// });
 
 // watch(dates, (val) => {
 //     const [start, end] = val ?? [];
@@ -299,12 +352,13 @@ onMounted(() => {
 //     }
 // }, { immediate: true });
 
-console.log(props);
+// console.log(props);
 
 </script>
 
 <template>
     <AppLayout title="Tabla xml">
+    <Toast group="filtros" />
     <Toast />
     <ConfirmDialog></ConfirmDialog>
             <DataTable 
@@ -650,14 +704,14 @@ console.log(props);
                                 @click="dates = [startOfYear(new Date()), endOfYear(new Date())]" 
                             />
                         </div>
-                        <div class="flex justify-end p-2">
+                        <!-- <div class="flex justify-end p-2">
                             <Button 
                                 label="Limpiar" 
                                 size="small" 
                                 severity="secondary"
                                 @click="dates = null"
                             />
-                        </div>
+                        </div> -->
                     </template>
                 </DatePicker>
             </div>
@@ -749,8 +803,8 @@ console.log(props);
             </div>
         </div>
         <div class="flex justify-end gap-2">
-            <Button type="button" icon="pi pi-times" label="Cancelar" severity="secondary" @click="visible_filter = false"></Button>
-            <Button type="button" icon="pi pi-replay" label="Restablecer" severity="help" @click="visible_filter = false"></Button>
+            <Button type="button" icon="pi pi-times" label="Cerrar" severity="secondary" @click="visible_filter = false"></Button>
+            <Button type="button" icon="pi pi-replay" label="Restablecer" severity="help" @click="resetFiltros"></Button>
             <!-- <Button type="button" icon="pi pi-filter" label="Aplicar filtros" @click="visible_filter = false"></Button> -->
         </div>
     </Dialog>

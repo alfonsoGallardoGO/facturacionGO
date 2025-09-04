@@ -36,8 +36,9 @@ class InvoiceSatController
     {
         $planta = $request->input('planta');
         $dates = $request->input('dates');
-
         $sesion = auth()->user();
+        $plantaEmpleado = auth()->user()->planta_empleado;
+        $plantaActual = auth()->user()->current_branch_office_id;
 
         $terms = InvoiceTerm::all();
         $locations = InvoiceLocation::all();
@@ -48,7 +49,7 @@ class InvoiceSatController
         $articles = InvoiceArticles::all();
         $accountingLists = InvoiceAccountingList::all();
         $operationTypes = InvoiceOperationTypes::all();
-        $plantas = Planta::all('code','id');
+        $plantas = $sesion->branchOffices()->get(['id', 'code']);
         $invoices = InvoiceSat::select(
             'invoice_sats.id',
             'invoice_sats.emisor_name',
@@ -98,10 +99,20 @@ class InvoiceSatController
         // ->where('invoice_sats.branch_office_id', 13)
         if ($planta) {
             $invoices->where('invoice_sats.branch_office_id', $planta);
+        }else if($plantaActual){
+            $invoices ->where('invoice_sats.branch_office_id', $plantaActual);
+        }else if($plantaEmpleado){
+            $invoices ->where('invoice_sats.branch_office_id', $plantaEmpleado);
         }else{
             $invoices ->where('invoice_sats.branch_office_id', 0);
         }
         if (is_array($dates) && count($dates) === 2) {
+            $invoices->whereBetween('invoice_sats.trandate', [$dates[0], $dates[1]]);
+        }else{
+            $dates = [
+                now()->startOfWeek()->format('Y-m-d'),
+                now()->endOfWeek()->format('Y-m-d')
+            ];
             $invoices->whereBetween('invoice_sats.trandate', [$dates[0], $dates[1]]);
         }
         $invoices = $invoices
@@ -147,7 +158,8 @@ class InvoiceSatController
             'accountingLists' => $accountingLists,
             'operationTypes' => $operationTypes,
             'plantas' => $plantas,
-            'sesion' => $sesion,
+            'plantaEmpleado' => $plantaEmpleado,
+            'plantaActual' => $plantaActual,
         ]);
     }
 

@@ -32,8 +32,13 @@ class InvoiceSatController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $planta = $request->input('planta');
+        $dates = $request->input('dates');
+
+        $sesion = auth()->user();
+
         $terms = InvoiceTerm::all();
         $locations = InvoiceLocation::all();
         $exclusions = InvoiceExclusionCategory::all();
@@ -62,6 +67,13 @@ class InvoiceSatController
             'invoice_sats.invoice_provider_type',
             'invoice_sats.efecto_comprobante',
             'invoice_sats.status',
+            'invoice_sats.invoice_exclusion_category_id',
+            'invoice_sats.invoice_department_id',
+            'invoice_sats.invoice_class_id',
+            'invoice_sats.external_id',
+            'invoice_sats.service_processing_at',
+            'invoice_sats.service_ends_at',
+            'invoice_sats.processing_at',
             'invoice_companies.name as company_name',
             'invoice_categories.name as categoria',
             'invoice_locations.name as ubicacion',
@@ -82,8 +94,18 @@ class InvoiceSatController
         ->leftJoin('invoice_accounting_lists', 'invoice_accounting_lists.id', '=', 'invoice_sats.invoice_accounting_id')
         ->leftJoin('invoice_articles', 'invoice_articles.id', '=', 'invoice_sats.invoice_article_id')
         ->leftJoin('invoice_exclusion_categories', 'invoice_exclusion_categories.id', '=', 'invoice_sats.invoice_exclusion_category_id')
-        ->leftJoin('invoice_operation_types', 'invoice_operation_types.id', '=', 'invoice_sats.invoice_operation_type_id')
-        ->where('invoice_sats.branch_office_id', 13)
+        ->leftJoin('invoice_operation_types', 'invoice_operation_types.id', '=', 'invoice_sats.invoice_operation_type_id');
+        // ->where('invoice_sats.branch_office_id', 13)
+        if ($planta) {
+            $invoices->where('invoice_sats.branch_office_id', $planta);
+        }else{
+            $invoices ->where('invoice_sats.branch_office_id', 0);
+        }
+        if (is_array($dates) && count($dates) === 2) {
+            $invoices->whereBetween('invoice_sats.trandate', [$dates[0], $dates[1]]);
+        }
+        $invoices = $invoices
+        ->orderBy('trandate', 'desc')
         ->get()
         ->map(function ($invoice) {
             $invoice->ready_to_netsuite =
@@ -96,7 +118,22 @@ class InvoiceSatController
                 !$invoice->trandate_cancel;
 
             return $invoice;
-        });
+        })
+        ->map(function ($invoice) {
+            $invoice->reseteable =
+                $invoice->send_status != 'pending' &&
+                $invoice->external_id;
+
+            return $invoice;
+        })
+        ->map(function ($invoice) {
+            $invoice->loading =
+                ($invoice->service_processing_at && !$invoice->service_ends_at) ||
+                $invoice->processing_at;
+
+            return $invoice;
+        })
+        ;
 
         return Inertia::render('Xml/Table', [
             'invoices' => $invoices,
@@ -110,6 +147,7 @@ class InvoiceSatController
             'accountingLists' => $accountingLists,
             'operationTypes' => $operationTypes,
             'plantas' => $plantas,
+            'sesion' => $sesion,
         ]);
     }
 

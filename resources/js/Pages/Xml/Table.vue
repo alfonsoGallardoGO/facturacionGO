@@ -1,9 +1,11 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { FilterMatchMode } from '@primevue/core/api';
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
+import { subDays, startOfMonth, endOfMonth, startOfWeek, endOfWeek, subMonths, startOfYear, endOfYear } from "date-fns";
+import { router } from '@inertiajs/vue3';
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -58,6 +60,7 @@ const props = defineProps({
     invoices: Array,
     operationTypes: Array,
     plantas: Array,
+    sesion: Object,
 });
 
 const filters = ref({
@@ -150,12 +153,11 @@ const provider_type = ref([
     { name: 'Varios', id: 8244 },
     { name: 'Viaticos', id: 12185 }
 ]);
-
 const status_envio = ref([
     { name: 'Pendiente', id: 'pending' },
-    { name: 'Error', id: 'error' },
+    { name: 'Canceladas', id: 'trandate_cancel' },
     { name: 'Correctas', id: 'correct' },
-    { name: 'Canceladas', id: 'trandate_cancel' }
+    { name: 'Error', id: 'error' }
 ]);
 const tipo_pago = ref([
     { name: 'Pago', id: 'P' },
@@ -163,8 +165,12 @@ const tipo_pago = ref([
     { name: 'Egreso', id: 'E' },
     { name: 'Nomina', id: 'N' }
 ]);
-const selectedStatus = ref('pending');
 
+const visible_form = ref(false);
+const visible_filter = ref(false);
+
+// Filtros ===================================
+const selectedStatus = ref('pending');
 const selectedPlanta = ref(null);
 const storedPlanta = localStorage.getItem("selectedPlanta");
 if (storedPlanta) {
@@ -175,11 +181,125 @@ if (storedPlanta) {
         console.error("Error al parsear selectedPlanta:", e);
     }
 }
+const selectedTipo = ref(null);
+const selectedXml = ref(null);
+const selectedPdf = ref(null);
+const selectedExcluidos = ref(null);
+const selectedVigencia = ref(null);
+const selectedDepartamento = ref(null);
+const selectedClase = ref(null);
+const dates = ref([startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })]);
 
-const visible_form = ref(false);
-const visible_filter = ref(false);
+const filteredInvoices = computed(() => {
+    return props.invoices.filter(inv => {
+        let ok = true
 
-// console.log(props.plantas);
+        // Estado envío
+        if (selectedStatus.value) {
+            if (selectedStatus.value === 'trandate_cancel') {
+                // caso especial: mostrar solo facturas con fecha de cancelación
+                if (!inv.trandate_cancel) {
+                    ok = false;
+                }
+            } else {
+                if (inv.send_status !== selectedStatus.value) {
+                    ok = false;
+                }
+            }
+        }
+
+        // Tipo comprobante
+        if (selectedTipo.value && inv.efecto_comprobante !== selectedTipo.value) {
+            ok = false
+        }
+
+        // Excluidos
+        if (selectedExcluidos.value == true && !inv.invoice_exclusion_category_id) {
+            ok = false
+        }
+        if (selectedExcluidos.value == false && inv.invoice_exclusion_category_id) {
+            ok = false
+        }
+
+        // Estado vigencia
+        if (selectedVigencia.value != null && inv.status != selectedVigencia.value) {
+            ok = false;
+        }
+
+        // XML
+        if (selectedXml.value == true && !inv.xml_path) {
+            ok = false
+        }
+        if (selectedXml.value == false && inv.xml_path) {
+            ok = false
+        }
+
+        // PDF
+        if (selectedPdf.value == true && !inv.pdf_path) {
+            ok = false
+        }
+        if (selectedPdf.value == false && inv.pdf_path) {
+            ok = false
+        }
+
+        // Departamento
+        if (selectedDepartamento.value && inv.invoice_department_id !== selectedDepartamento.value) {
+            ok = false
+        }
+
+        // Clase
+        if (selectedClase.value && inv.invoice_class_id !== selectedClase.value) {
+            ok = false
+        }
+
+        return ok
+    })
+})
+
+const loadInvoices = () => {
+    const [start, end] = dates.value ?? [];
+
+    router.get(route('/xml-table'), {
+        planta: selectedPlanta.value,
+        dates: start && end ? [
+            start.toISOString().slice(0, 10),
+            end.toISOString().slice(0, 10)
+        ] : null,
+    }, {
+        preserveState: true, // mantiene filtros y UI
+        replace: true,       // evita duplicar historial
+    });
+};
+
+watch([selectedPlanta, dates], () => {
+    loadInvoices();
+});
+
+onMounted(() => {
+    loadInvoices();
+});
+
+// watch(dates, (val) => {
+//     const [start, end] = val ?? [];
+//     if (start && end) {
+//         const formatDate = (d) => {
+//             const date = new Date(d);
+//             const year = date.getFullYear();
+//             const month = String(date.getMonth() + 1).padStart(2, "0");
+//             const day = String(date.getDate()).padStart(2, "0");
+//             return `${year}-${month}-${day}`;
+//         };
+
+//         filters.value.trandate = {
+//             value: [formatDate(start), formatDate(end)],
+//             matchMode: FilterMatchMode.BETWEEN
+//         };
+//     } else {
+//         delete filters.value.trandate;
+//     }
+// }, { immediate: true });
+
+console.log(props);
 
 </script>
 
@@ -188,7 +308,7 @@ const visible_filter = ref(false);
     <Toast />
     <ConfirmDialog></ConfirmDialog>
             <DataTable 
-                :value="props.invoices"
+                :value="filteredInvoices"
                 tableStyle="min-width: 50rem"
                 class="p-0"
                 ref="dt"
@@ -198,12 +318,13 @@ const visible_filter = ref(false);
                 :rows="10"
                 :filters="filters"
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[5, 10, 25, 50, 100, props.invoices.length]"
+                :rowsPerPageOptions="[5, 10, 25, 50, 100]"
                 currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros"
                 removableSort
                 resizableColumns 
                 columnResizeMode="fit"
             >
+            <!-- filteredInvoices.length -->
                 <Toolbar class="mb-6">
                     <template #start>
                         <div style="text-align:left">
@@ -253,7 +374,15 @@ const visible_filter = ref(false);
                 <template v-for="col in selectedColumns" :key="col.field">
                     <Column :field="col.field" :header="col.header" sortable>
                         <template v-if="col.field === 'acciones'" #body="slotProps">
+                            <div class="flex justify-center">
+                                <i 
+                                    v-if="slotProps.data.loading"
+                                    class="pi pi-spin pi-spinner mr-2" 
+                                    size="small"
+                                />
+                            </div>
                             <Button
+                                v-if="slotProps.data.xml_path"
                                 label="xml"
                                 size="small"
                                 icon="pi pi-file"
@@ -263,6 +392,7 @@ const visible_filter = ref(false);
                                 @click="downloadFile(slotProps.data.xml_path)"
                             />
                             <Button
+                                v-if="slotProps.data.pdf_path"
                                 label="pdf"
                                 size="small"
                                 icon="pi pi-file-pdf"
@@ -272,16 +402,6 @@ const visible_filter = ref(false);
                                 severity="danger"
                                 @click="downloadFile(slotProps.data.pdf_path)"
                             />
-                            <!-- <Button
-                                label="editar"
-                                size="small"
-                                icon="pi pi-pencil"
-                                variant="outlined"
-                                rounded
-                                class="mr-2"
-                                severity="secondary"
-                                @click="visible_form = true"
-                            /> -->
                             <Button
                                 v-if="slotProps.data.ready_to_netsuite"
                                 label="Enviar a netsuite"
@@ -291,6 +411,17 @@ const visible_filter = ref(false);
                                 rounded
                                 class="mr-2"
                                 severity="success"
+                                @click="visible_form = true"
+                            />
+                            <Button
+                                v-if="slotProps.data.reseteable"
+                                label="Reiniciar"
+                                size="small"
+                                icon="pi pi-refresh"
+                                variant="outlined"
+                                rounded
+                                class="mr-2"
+                                severity="help"
                                 @click="visible_form = true"
                             />
                         </template>
@@ -325,7 +456,7 @@ const visible_filter = ref(false);
 
     <!-- Modal Formulario -->
     <Dialog v-model:visible="visible_form" modal header="Datos Factura" :style="{ width: '75rem' }">
-        <div class="card grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="card border-warning grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="col-span-4 md:col-span-2">
                 <label for="invoice_category_id" class="font-bold block mb-2">Categoría</label>
                 <Select 
@@ -450,7 +581,7 @@ const visible_filter = ref(false);
     
     <!-- Modal Filtros -->
     <Dialog v-model:visible="visible_filter" modal header="Filtros" :style="{ width: '75rem' }">
-        <div class="card grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="card border-warning grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Estado de envío</label>
                 <Select 
@@ -481,16 +612,59 @@ const visible_filter = ref(false);
                     selectionMode="range" 
                     :manualInput="false" 
                     :numberOfMonths="2" 
-                    showButtonBar 
                     dateFormat="dd/mm/yy" 
                     inputId="filtro_fechas"
+                    @update:modelValue="val => dates = val ?? []"
                     fluid
-                />
+                >
+                    <template #footer>
+                        <div class="flex justify-between p-2">
+                            <Button 
+                                label="Hoy" 
+                                size="small" 
+                                @click="dates = [new Date(), new Date()]" 
+                            />
+                            <Button 
+                                label="Últimos 7 días" 
+                                size="small" 
+                                @click="dates = [subDays(new Date(), 7), new Date()]" 
+                            />
+                            <Button 
+                                label="Esta semana" 
+                                size="small" 
+                                @click="dates = [startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })]" 
+                            />
+                            <Button 
+                                label="Este mes" 
+                                size="small" 
+                                @click="dates = [startOfMonth(new Date()), endOfMonth(new Date())]" 
+                            />
+                            <Button 
+                                label="Mes pasado" 
+                                size="small" 
+                                @click="dates = [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))]" 
+                            />
+                            <Button 
+                                label="Este año" 
+                                size="small" 
+                                @click="dates = [startOfYear(new Date()), endOfYear(new Date())]" 
+                            />
+                        </div>
+                        <div class="flex justify-end p-2">
+                            <Button 
+                                label="Limpiar" 
+                                size="small" 
+                                severity="secondary"
+                                @click="dates = null"
+                            />
+                        </div>
+                    </template>
+                </DatePicker>
             </div>
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Efecto comprobante</label>
                 <Select 
-                    v-model="selectedPlanta"
+                    v-model="selectedTipo"
                     :options="tipo_pago"
                     optionLabel="name"
                     optionValue="id"
@@ -502,7 +676,7 @@ const visible_filter = ref(false);
             <div class="col-span-4 md:col-span-1">
                 <label for="" class="font-bold block mb-2">Excluidos</label>
                 <Select 
-                    v-model="valor"
+                    v-model="selectedExcluidos"
                     :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
                     optionLabel="label"
                     optionValue="value"
@@ -514,7 +688,7 @@ const visible_filter = ref(false);
             <div class="col-span-4 md:col-span-1">
                 <label for="" class="font-bold block mb-2">Estado vigencia</label>
                 <Select 
-                    v-model="valor"
+                    v-model="selectedVigencia"
                     :options="[{ label: 'Vigente', value: 1 }, { label: 'Cancelado', value: 0 }]"
                     optionLabel="label"
                     optionValue="value"
@@ -526,7 +700,7 @@ const visible_filter = ref(false);
             <div class="col-span-4 md:col-span-1">
                 <label for="" class="font-bold block mb-2">Con XML?</label>
                 <Select 
-                    v-model="valor"
+                    v-model="selectedXml"
                     :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
                     optionLabel="label"
                     optionValue="value"
@@ -537,8 +711,8 @@ const visible_filter = ref(false);
             </div>
             <div class="col-span-4 md:col-span-1">
                 <label for="" class="font-bold block mb-2">Con PDF?</label>
-                <Select 
-                    v-model="valor"
+                <Select
+                    v-model="selectedPdf" 
                     :options="[{ label: 'Sí', value: true }, { label: 'No', value: false }]"
                     optionLabel="label"
                     optionValue="value"
@@ -550,6 +724,7 @@ const visible_filter = ref(false);
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Departamento</label>
                 <Select 
+                    v-model="selectedDepartamento"
                     :options="props.departments"
                     optionLabel="name"
                     optionValue="id"
@@ -562,6 +737,7 @@ const visible_filter = ref(false);
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Clase</label>
                 <Select 
+                    v-model="selectedClase"
                     :options="props.classes"
                     optionLabel="name"
                     optionValue="id"
@@ -575,7 +751,7 @@ const visible_filter = ref(false);
         <div class="flex justify-end gap-2">
             <Button type="button" icon="pi pi-times" label="Cancelar" severity="secondary" @click="visible_filter = false"></Button>
             <Button type="button" icon="pi pi-replay" label="Restablecer" severity="help" @click="visible_filter = false"></Button>
-            <Button type="button" icon="pi pi-filter" label="Aplicar filtros" @click="visible_filter = false"></Button>
+            <!-- <Button type="button" icon="pi pi-filter" label="Aplicar filtros" @click="visible_filter = false"></Button> -->
         </div>
     </Dialog>
 </template>

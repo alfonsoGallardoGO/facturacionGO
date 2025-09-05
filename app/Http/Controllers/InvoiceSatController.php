@@ -35,6 +35,7 @@ class InvoiceSatController
     public function index(Request $request)
     {
         $planta = $request->input('planta');
+        $planta = $planta ? (int) $planta : null;
         $dates = $request->input('dates');
         $sesion = auth()->user();
         $plantaEmpleado = auth()->user()->planta_empleado;
@@ -106,6 +107,7 @@ class InvoiceSatController
         }else{
             $invoices ->where('invoice_sats.branch_office_id', 0);
         }
+
         if (is_array($dates) && count($dates) === 2) {
             $invoices->whereBetween('invoice_sats.trandate', [$dates[0], $dates[1]]);
         }else{
@@ -160,6 +162,8 @@ class InvoiceSatController
             'plantas' => $plantas,
             'plantaEmpleado' => $plantaEmpleado,
             'plantaActual' => $plantaActual,
+            'plantaFiltro' => $planta,
+            'datesFiltro' => $dates,
         ]);
     }
 

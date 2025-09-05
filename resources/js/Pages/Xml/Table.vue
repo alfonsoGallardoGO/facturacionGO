@@ -62,6 +62,8 @@ const props = defineProps({
     plantas: Array,
     plantaEmpleado: Number,
     plantaActual: Number,
+    plantaFiltro: Number,
+    datesFiltro: Array,
 });
 
 const filters = ref({
@@ -171,9 +173,19 @@ const visible_form = ref(false);
 const visible_filter = ref(false);
 
 // Filtros ===================================
-const filtrosAplicandose = ref(false);
+// const selectedPlanta = ref(props.plantaActual ?? props.plantaEmpleado ?? null);
+// const dates = ref([startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })]);
+// Fechas iniciales
+const dates = ref(
+    props.datesFiltro?.length === 2
+    ? [new Date(props.datesFiltro[0]), new Date(props.datesFiltro[1])]
+    : [startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })]
+)
+
+// Planta inicial
+const selectedPlanta = ref(props.plantaFiltro ?? props.plantaActual ?? props.plantaEmpleado ?? null)
+
 const selectedStatus = ref('pending');
-const selectedPlanta = ref(props.plantaActual ?? props.plantaEmpleado ?? null);
 const selectedTipo = ref(null);
 const selectedXml = ref(null);
 const selectedPdf = ref(null);
@@ -181,7 +193,6 @@ const selectedExcluidos = ref(null);
 const selectedVigencia = ref(null);
 const selectedDepartamento = ref(null);
 const selectedClase = ref(null);
-const dates = ref([startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 })]);
 
 const filteredInvoices = computed(() => {
     return props.invoices.filter(inv => {

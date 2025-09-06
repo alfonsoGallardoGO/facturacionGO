@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e28f8663b22a66b99838dbe5dff00f5",
+    "content-hash": "38e775b44e685b5c77023cdcd658da12",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -696,6 +696,287 @@
                 }
             ],
             "time": "2024-10-09T13:47:03+00:00"
+        },
+        {
+            "name": "eclipxe/cfdiutils",
+            "version": "v2.31.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eclipxe13/CfdiUtils.git",
+                "reference": "f9f77b8d339065ac3680b62fae80be3086920719"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eclipxe13/CfdiUtils/zipball/f9f77b8d339065ac3680b62fae80be3086920719",
+                "reference": "f9f77b8d339065ac3680b62fae80be3086920719",
+                "shasum": ""
+            },
+            "require": {
+                "eclipxe/xmlresourceretriever": "^1.3.0",
+                "eclipxe/xmlschemavalidator": "^3.0.2",
+                "ext-dom": "*",
+                "ext-iconv": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xsl": "*",
+                "php": ">=7.3 <8.4",
+                "symfony/process": "^5.4.47|^6.4.15|^7.1.8"
+            },
+            "require-dev": {
+                "ext-bcmath": "*",
+                "ext-curl": "*",
+                "ext-soap": "*",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "genkgo/xsl": "^1.0.8",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "suggest": {
+                "ext-bcmath": "Allows calculate totals and taxes on Pagos 2.0",
+                "ext-soap": "Allows consume the CFDI Status SAT Web Service",
+                "genkgo/xsl": "Allows usage of Genkgo/Xsl transformations"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CfdiUtils\\": "src/CfdiUtils/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "PHP Common utilities for Mexican CFDI 3.2, 3.3 & 4.0",
+            "homepage": "https://github.com/eclipxe13/CfdiUtils",
+            "keywords": [
+                "cfdi",
+                "cfdi33",
+                "cfdi40",
+                "electronic invoice",
+                "mexico"
+            ],
+            "support": {
+                "chat": "https://discord.gg/aFGYXvX",
+                "docs": "https://cfdiutils.readthedocs.io/",
+                "issues": "https://github.com/eclipxe13/CfdiUtils/issues",
+                "source": "https://github.com/eclipxe13/CfdiUtils"
+            },
+            "time": "2025-02-19T19:10:39+00:00"
+        },
+        {
+            "name": "eclipxe/enum",
+            "version": "v0.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eclipxe13/enum.git",
+                "reference": "72ee412a418f3e60212d9dfc2e93a791d215dbf6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eclipxe13/enum/zipball/72ee412a418f3e60212d9dfc2e93a791d215dbf6",
+                "reference": "72ee412a418f3e60212d9dfc2e93a791d215dbf6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eclipxe\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "Enum based on the Brent Roose enum idea https://stitcher.io/blog/php-enums",
+            "homepage": "https://github.com/eclipxe13/enum",
+            "keywords": [
+                "enum",
+                "reflection"
+            ],
+            "support": {
+                "issues": "https://github.com/eclipxe13/enum/issues",
+                "source": "https://github.com/eclipxe13/enum"
+            },
+            "time": "2025-03-30T06:46:19+00:00"
+        },
+        {
+            "name": "eclipxe/micro-catalog",
+            "version": "v0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eclipxe13/micro-catalog.git",
+                "reference": "e94aca927c5cba1f86bd392e5977bbebe67e0576"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eclipxe13/micro-catalog/zipball/e94aca927c5cba1f86bd392e5977bbebe67e0576",
+                "reference": "e94aca927c5cba1f86bd392e5977bbebe67e0576",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eclipxe\\MicroCatalog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "Micro catalog template class, useful to create value objects based on a known small catalog",
+            "homepage": "https://github.com/eclipxe13/micro-catalog",
+            "keywords": [
+                "catalog",
+                "generic"
+            ],
+            "support": {
+                "issues": "https://github.com/eclipxe13/micro-catalog/issues",
+                "source": "https://github.com/eclipxe13/micro-catalog"
+            },
+            "time": "2025-03-31T03:05:27+00:00"
+        },
+        {
+            "name": "eclipxe/xmlresourceretriever",
+            "version": "v1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eclipxe13/XmlResourceRetriever.git",
+                "reference": "2c37f1d2adcf644da09775a8381365593c5cea2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eclipxe13/XmlResourceRetriever/zipball/2c37f1d2adcf644da09775a8381365593c5cea2a",
+                "reference": "2c37f1d2adcf644da09775a8381365593c5cea2a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "ext-filter": "*",
+                "ext-xml": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.4",
+                "phpstan/phpstan": "^0.9|^0.10|^0.11|^0.12",
+                "phpunit/phpunit": "^6.2|^7.0",
+                "squizlabs/php_codesniffer": "^3.0",
+                "vimeo/psalm": "^3.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "XmlResourceRetriever\\": "src/XmlResourceRetriever/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "http://eclipxe.com.mx"
+                }
+            ],
+            "description": "XSD and XLST resource downloader for local storage",
+            "homepage": "https://github.com/eclipxe13/XmlResourceRetriever",
+            "support": {
+                "issues": "https://github.com/eclipxe13/XmlResourceRetriever/issues",
+                "source": "https://github.com/eclipxe13/XmlResourceRetriever/tree/v1.3.2"
+            },
+            "time": "2021-04-09T03:15:11+00:00"
+        },
+        {
+            "name": "eclipxe/xmlschemavalidator",
+            "version": "v3.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eclipxe13/XmlSchemaValidator.git",
+                "reference": "e497f25affb999759af22ea136a039881c2d22b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eclipxe13/XmlSchemaValidator/zipball/e497f25affb999759af22ea136a039881c2d22b1",
+                "reference": "e497f25affb999759af22ea136a039881c2d22b1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eclipxe\\XmlSchemaValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "PHP Library for XML Schema Validations",
+            "homepage": "https://github.com/eclipxe13/XmlSchemaValidator",
+            "keywords": [
+                "validation",
+                "xml",
+                "xmlschema",
+                "xsd"
+            ],
+            "support": {
+                "issues": "https://github.com/eclipxe13/XmlSchemaValidator/issues",
+                "source": "https://github.com/eclipxe13/XmlSchemaValidator"
+            },
+            "time": "2025-02-18T16:53:48+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -2524,6 +2805,70 @@
             "time": "2024-12-10T19:59:05+00:00"
         },
         {
+            "name": "league/plates",
+            "version": "v3.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/plates.git",
+                "reference": "12ee65166adbc6fb5916fb80b0c0758e49a2d996"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/plates/zipball/12ee65166adbc6fb5916fb80b0c0758e49a2d996",
+                "reference": "12ee65166adbc6fb5916fb80b0c0758e49a2d996",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.6",
+                "phpunit/phpunit": "^11.4",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Plates\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Reinink",
+                    "email": "jonathan@reinink.ca",
+                    "role": "Developer"
+                },
+                {
+                    "name": "RJ Garcia",
+                    "email": "ragboyjr@icloud.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Plates, the native PHP template system that's fast, easy to use and easy to extend.",
+            "homepage": "https://platesphp.com",
+            "keywords": [
+                "league",
+                "package",
+                "templates",
+                "templating",
+                "views"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/plates/issues",
+                "source": "https://github.com/thephpleague/plates/tree/v3.6.0"
+            },
+            "time": "2024-11-02T15:03:35+00:00"
+        },
+        {
             "name": "league/uri",
             "version": "7.5.1",
             "source": {
@@ -2774,6 +3119,73 @@
                 }
             ],
             "time": "2025-01-27T12:07:53+00:00"
+        },
+        {
+            "name": "masterminds/html5",
+            "version": "2.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251",
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8 || ^9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/Masterminds/html5-php/issues",
+                "source": "https://github.com/Masterminds/html5-php/tree/2.10.0"
+            },
+            "time": "2025-07-25T09:04:22+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -3591,6 +4003,578 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2020-10-15T08:29:30+00:00"
+        },
+        {
+            "name": "php-http/discovery",
+            "version": "1.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/discovery.git",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "nyholm/psr7": "<1.0",
+                "zendframework/zend-diactoros": "*"
+            },
+            "provide": {
+                "php-http/async-client-implementation": "*",
+                "php-http/client-implementation": "*",
+                "psr/http-client-implementation": "*",
+                "psr/http-factory-implementation": "*",
+                "psr/http-message-implementation": "*"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0.2|^2.0",
+                "graham-campbell/phpspec-skip-example-extension": "^5.0",
+                "php-http/httplug": "^1.0 || ^2.0",
+                "php-http/message-factory": "^1.0",
+                "phpspec/phpspec": "^5.1 || ^6.1 || ^7.3",
+                "sebastian/comparator": "^3.0.5 || ^4.0.8",
+                "symfony/phpunit-bridge": "^6.4.4 || ^7.0.1"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Http\\Discovery\\Composer\\Plugin",
+                "plugin-optional": true
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Discovery\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "src/Composer/Plugin.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Finds and installs PSR-7, PSR-17, PSR-18 and HTTPlug implementations",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "adapter",
+                "client",
+                "discovery",
+                "factory",
+                "http",
+                "message",
+                "psr17",
+                "psr7"
+            ],
+            "support": {
+                "issues": "https://github.com/php-http/discovery/issues",
+                "source": "https://github.com/php-http/discovery/tree/1.20.0"
+            },
+            "time": "2024-10-02T11:20:13+00:00"
+        },
+        {
+            "name": "phpcfdi/cfdi-cleaner",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/cfdi-cleaner.git",
+                "reference": "a9891500bb949afb48456007420d024ddb94b357"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/cfdi-cleaner/zipball/a9891500bb949afb48456007420d024ddb94b357",
+                "reference": "a9891500bb949afb48456007420d024ddb94b357",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=7.3",
+                "symfony/polyfill-php80": "^1.22"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\CfdiCleaner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com"
+                }
+            ],
+            "description": "Clean up Mexican CFDI",
+            "homepage": "https://github.com/phpcfdi/cfdi-cleaner",
+            "keywords": [
+                "cfdi",
+                "mexico",
+                "sat"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/cfdi-cleaner/issues",
+                "source": "https://github.com/phpcfdi/cfdi-cleaner/tree/v1.4.0"
+            },
+            "time": "2025-07-24T20:28:59+00:00"
+        },
+        {
+            "name": "phpcfdi/cfdi-sat-scraper",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/cfdi-sat-scraper.git",
+                "reference": "e53f120ec7cc6871b894be75239404161e69bd7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/cfdi-sat-scraper/zipball/e53f120ec7cc6871b894be75239404161e69bd7e",
+                "reference": "e53f120ec7cc6871b894be75239404161e69bd7e",
+                "shasum": ""
+            },
+            "require": {
+                "eclipxe/enum": "^0.2.0",
+                "eclipxe/micro-catalog": "^0.1.3",
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "guzzlehttp/guzzle": "^7.0",
+                "guzzlehttp/promises": "^2.0",
+                "php": ">=7.3",
+                "phpcfdi/credentials": "^1.1",
+                "phpcfdi/image-captcha-resolver": "^0.2.4",
+                "psr/http-message": "^1.1 || ^2.0",
+                "symfony/css-selector": "^5.4 || ^6.0 || ^7.0",
+                "symfony/dom-crawler": "^5.4 || ^6.0 || ^7.0"
+            },
+            "require-dev": {
+                "ext-iconv": "*",
+                "fakerphp/faker": "^1.13",
+                "phpcfdi/image-captcha-resolver-boxfactura-ai": "^0.1.0",
+                "phpunit/phpunit": "^9.5",
+                "symfony/dotenv": "^5.4 || ^6.0 || ^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\CfdiSatScraper\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cesar Aguilera",
+                    "email": "cesargnu29@gmail.com"
+                },
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com"
+                }
+            ],
+            "description": "Web Scraping para extraer facturas electrónicas desde la página del SAT",
+            "keywords": [
+                "Scrap",
+                "cfdi",
+                "mexico",
+                "sat"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/cfdi-sat-scraper/issues",
+                "source": "https://github.com/phpcfdi/cfdi-sat-scraper/tree/v4.0.0"
+            },
+            "time": "2025-05-31T16:39:35+00:00"
+        },
+        {
+            "name": "phpcfdi/cfdi-to-json",
+            "version": "v0.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/cfdi-to-json.git",
+                "reference": "18e18fe276cb10896933b786c7b5400428fae712"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/cfdi-to-json/zipball/18e18fe276cb10896933b786c7b5400428fae712",
+                "reference": "18e18fe276cb10896933b786c7b5400428fae712",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\CfdiToJson\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://github.com/phpcfdi/cfdi-to-json"
+                }
+            ],
+            "description": "Convert CFDI to JSON",
+            "homepage": "https://github.com/phpcfdi/cfdi-to-json",
+            "keywords": [
+                "cfdi",
+                "json",
+                "mexico",
+                "sat"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/cfdi-to-json/issues",
+                "source": "https://github.com/phpcfdi/cfdi-to-json"
+            },
+            "time": "2024-07-12T04:23:51+00:00"
+        },
+        {
+            "name": "phpcfdi/cfditopdf",
+            "version": "v0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/cfditopdf.git",
+                "reference": "61288f8f8643eed11cb7e182b0945e77f924372c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/cfditopdf/zipball/61288f8f8643eed11cb7e182b0945e77f924372c",
+                "reference": "61288f8f8643eed11cb7e182b0945e77f924372c",
+                "shasum": ""
+            },
+            "require": {
+                "eclipxe/cfdiutils": "^2.29",
+                "league/plates": "^3.5",
+                "php": ">=7.3",
+                "phpcfdi/cfdi-cleaner": "^1.3.3",
+                "spipu/html2pdf": "^5.2.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "bin": [
+                "bin/cfditopdf"
+            ],
+            "type": "library",
+            "extra": {
+                "phar-builder": {
+                    "name": "cfditopdf.phar",
+                    "include": [
+                        "bin",
+                        "src",
+                        "templates"
+                    ],
+                    "output-dir": "build/",
+                    "compression": "GZip",
+                    "entry-point": "bin/cfditopdf",
+                    "include-dev": false,
+                    "skip-shebang": false
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\CfdiToPdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "Create a generic PDF file from a CFDI 3.3 & 4.0 (CLI included)",
+            "homepage": "https://github.com/phpcfdi/cfditopdf",
+            "keywords": [
+                "cfdi",
+                "factura",
+                "invoice",
+                "mexico",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/cfditopdf/issues",
+                "source": "https://github.com/phpcfdi/cfditopdf"
+            },
+            "time": "2024-09-02T19:33:54+00:00"
+        },
+        {
+            "name": "phpcfdi/credentials",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/credentials.git",
+                "reference": "2307eb2ae8a968b0e8b78d9710aa7544a5642aea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/credentials/zipball/2307eb2ae8a968b0e8b78d9710aa7544a5642aea",
+                "reference": "2307eb2ae8a968b0e8b78d9710aa7544a5642aea",
+                "shasum": ""
+            },
+            "require": {
+                "eclipxe/enum": "^0.2.7",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "phpunit/phpunit": "^10.5.45"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\Credentials\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com"
+                }
+            ],
+            "description": "Library to use eFirma (fiel) and CSD (sellos) from SAT",
+            "homepage": "https://github.com/phpcfdi/credentials",
+            "keywords": [
+                "certificado",
+                "cfdi",
+                "csd",
+                "efirma",
+                "fiel",
+                "sat",
+                "sello"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/credentials/issues",
+                "source": "https://github.com/phpcfdi/credentials"
+            },
+            "time": "2025-04-12T20:29:23+00:00"
+        },
+        {
+            "name": "phpcfdi/image-captcha-resolver",
+            "version": "v0.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/image-captcha-resolver.git",
+                "reference": "585dfdece2028033cce77b6c3e78d9ed0d9775ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/image-captcha-resolver/zipball/585dfdece2028033cce77b6c3e78d9ed0d9775ea",
+                "reference": "585dfdece2028033cce77b6c3e78d9ed0d9775ea",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "ext-json": "*",
+                "php": ">=7.3",
+                "php-http/discovery": "^1.14",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0",
+                "symfony/polyfill-php80": "^1.23"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.3",
+                "guzzlehttp/psr7": "^2.0",
+                "php-http/guzzle7-adapter": "^1.0",
+                "php-http/mock-client": "^1.4",
+                "phpunit/phpunit": "^9.5",
+                "symfony/process": "^5.4 || ^6.4 || ^7.1",
+                "vlucas/phpdotenv": "^5.3"
+            },
+            "suggest": {
+                "symfony/process": "To implement recommended CommandLineResolver"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\ImageCaptchaResolver\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "Conectores para resolver captchas de imágenes",
+            "homepage": "https://github.com/phpcfdi/image-captcha-resolver",
+            "support": {
+                "issues": "https://github.com/phpcfdi/image-captcha-resolver/issues",
+                "source": "https://github.com/phpcfdi/image-captcha-resolver"
+            },
+            "time": "2024-10-03T14:14:19+00:00"
+        },
+        {
+            "name": "phpcfdi/rfc",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/rfc.git",
+                "reference": "1040a47d453fcdd6c9e91654c874f5629c5ccd36"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/rfc/zipball/1040a47d453fcdd6c9e91654c874f5629c5ccd36",
+                "reference": "1040a47d453fcdd6c9e91654c874f5629c5ccd36",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.13",
+                "phpunit/phpunit": "^10.5.45"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\Rfc\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://eclipxe.com.mx/"
+                }
+            ],
+            "description": "PHP library to deal with Mexican RFC",
+            "homepage": "https://github.com/phpcfdi/rfc",
+            "keywords": [
+                "mexico",
+                "sat"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/rfc/issues",
+                "source": "https://github.com/phpcfdi/rfc"
+            },
+            "time": "2025-04-12T20:09:29+00:00"
+        },
+        {
+            "name": "phpcfdi/sat-ws-descarga-masiva",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/sat-ws-descarga-masiva.git",
+                "reference": "39c534602c042ef6901bb9e2e2d21379687c1034"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/sat-ws-descarga-masiva/zipball/39c534602c042ef6901bb9e2e2d21379687c1034",
+                "reference": "39c534602c042ef6901bb9e2e2d21379687c1034",
+                "shasum": ""
+            },
+            "require": {
+                "eclipxe/enum": "^0.2.0",
+                "eclipxe/micro-catalog": "^0.1.2",
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-zip": "*",
+                "php": ">=8.1",
+                "phpcfdi/credentials": "^1.3",
+                "phpcfdi/rfc": "^1.2"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.2.0",
+                "phpunit/phpunit": "^10.5.45",
+                "robrichards/xmlseclibs": "^3.1.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "To use GuzzleWebClient implementation"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\SatWsDescargaMasiva\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cesar Aguilera",
+                    "email": "cesargnu29@gmail.com"
+                },
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com"
+                }
+            ],
+            "description": "Librería para usar el servicio web del SAT de Descarga Masiva",
+            "homepage": "https://github.com/phpcfdi/sat-ws-descarga-masiva",
+            "keywords": [
+                "cfdi",
+                "descarga",
+                "download",
+                "sat",
+                "webservice"
+            ],
+            "support": {
+                "chat": "https://discord.gg/aFGYXvX",
+                "issues": "https://github.com/phpcfdi/sat-ws-descarga-masiva/issues",
+                "source": "https://github.com/phpcfdi/sat-ws-descarga-masiva"
+            },
+            "time": "2025-06-03T06:36:40+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -4602,6 +5586,63 @@
             "time": "2025-07-23T16:08:05+00:00"
         },
         {
+            "name": "spipu/html2pdf",
+            "version": "v5.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spipu/html2pdf.git",
+                "reference": "98416dd8eadd3b966f41430b841d3e4dd6eadc6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spipu/html2pdf/zipball/98416dd8eadd3b966f41430b841d3e4dd6eadc6f",
+                "reference": "98416dd8eadd3b966f41430b841d3e4dd6eadc6f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "php": "^7.2 || ^8.0",
+                "tecnickcom/tcpdf": "^6.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.0 || ^9.0"
+            },
+            "suggest": {
+                "ext-gd": "Allows to embed images into the PDF",
+                "fagundes/zff-html2pdf": "if you need to integrate Html2Pdf with Zend Framework 2 (zf2)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spipu\\Html2Pdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Spipu",
+                    "homepage": "https://github.com/spipu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Html2Pdf is a HTML to PDF converter written in PHP - It uses TCPDF - OFFICIAL PACKAGE",
+            "homepage": "http://html2pdf.fr/",
+            "keywords": [
+                "html",
+                "html2pdf",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/spipu/html2pdf/issues",
+                "source": "https://github.com/spipu/html2pdf/tree/v5.3.3"
+            },
+            "time": "2025-06-08T21:47:59+00:00"
+        },
+        {
             "name": "symfony/clock",
             "version": "v7.3.0",
             "source": {
@@ -4904,6 +5945,73 @@
                 }
             ],
             "time": "2024-09-25T14:21:43+00:00"
+        },
+        {
+            "name": "symfony/dom-crawler",
+            "version": "v7.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dom-crawler.git",
+                "reference": "8b2ee2e06ab99fa5f067b6699296d4e35c156bb9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/8b2ee2e06ab99fa5f067b6699296d4e35c156bb9",
+                "reference": "8b2ee2e06ab99fa5f067b6699296d4e35c156bb9",
+                "shasum": ""
+            },
+            "require": {
+                "masterminds/html5": "^2.6",
+                "php": ">=8.2",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "symfony/css-selector": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\DomCrawler\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Eases DOM navigation for HTML and XML documents",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/dom-crawler/tree/v7.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-06-15T10:07:06+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -7030,6 +8138,77 @@
                 }
             ],
             "time": "2025-07-29T20:02:46+00:00"
+        },
+        {
+            "name": "tecnickcom/tcpdf",
+            "version": "6.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tecnickcom/TCPDF.git",
+                "reference": "ca5b6de294512145db96bcbc94e61696599c391d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/ca5b6de294512145db96bcbc94e61696599c391d",
+                "reference": "ca5b6de294512145db96bcbc94e61696599c391d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "support": {
+                "issues": "https://github.com/tecnickcom/TCPDF/issues",
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.10.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/donate/?hosted_button_id=NZUEC5XS8MFBJ",
+                    "type": "custom"
+                }
+            ],
+            "time": "2025-05-27T18:02:28+00:00"
         },
         {
             "name": "tightenco/ziggy",

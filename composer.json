@@ -18,6 +18,10 @@
         "league/oauth1-client": "^1.11",
         "maennchen/zipstream-php": "^3.1",
         "netsuitephp/netsuite-laravel": "^1.0",
+        "phpcfdi/cfdi-sat-scraper": "^4.0",
+        "phpcfdi/cfdi-to-json": "^0.3.5",
+        "phpcfdi/cfditopdf": "^0.4.2",
+        "phpcfdi/sat-ws-descarga-masiva": "^1.1",
         "spatie/laravel-permission": "^6.21",
         "tightenco/ziggy": "^2.0"
     },

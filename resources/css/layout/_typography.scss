@@ -1,3 +1,7 @@
+body {
+    font-family: 'Roboto', sans-serif; /* 👈 aquí tu tipografía */
+}
+
 h1,
 h2,
 h3,
@@ -5,7 +9,7 @@ h4,
 h5,
 h6 {
     margin: 1.5rem 0 1rem 0;
-    font-family: inherit;
+    font-family: 'Poppins', sans-serif; /* 👈 aquí tu tipografía */
     font-weight: 700;
     line-height: 1.5;
     color: var(--text-color);
@@ -61,8 +65,11 @@ hr {
 p {
     margin: 0 0 1rem 0;
     line-height: 1.5;
+    font-family: 'Roboto', sans-serif; /* 👈 aquí tu tipografía */
 
     &:last-child {
         margin-bottom: 0;
     }
 }
+
+

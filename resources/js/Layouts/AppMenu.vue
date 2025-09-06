@@ -22,11 +22,43 @@ const model = ref([
                 icon: "pi pi-fw pi-file",
                 to: "/xml-table",
             },
+            {
+                label: "Listas de Contabilidad",
+                icon: "pi pi-fw pi-book",
+                to: "/listas-contabilidad",
+            },
+            {
+                label: "Articulos",
+                icon: "pi pi-fw pi-warehouse",
+                to: "/articulos",
+            },
+            {
+                label: "Categorias de Factura",
+                icon: "pi pi-fw pi-calculator",
+                to: "/categoria-facturas",
+            },
+            {
+                label: "Clases de Facturacion",
+                icon: "pi pi-fw pi-bookmark",
+                to: "/clases-facturacion",
+            },
+            {
+                label: "Empresas",
+                icon: "pi pi-fw pi-building-columns",
+                to: "/empresas",
+            },
+            {
+                label: "Ubicaciones",
+                icon: "pi pi-fw pi-building",
+                to: "/ubicaciones",
+            },
+            {
+                label: "Terminos de Pago",
+                icon: "pi pi-fw pi-money-bill",
+                to: "/terminos-pago",
+            },
         ],
     },
-    // {
-    //     label: "Portales",
-    // },
 ]);
 </script>
 

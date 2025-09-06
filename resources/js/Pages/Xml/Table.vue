@@ -143,10 +143,16 @@ const sendToNetSuite = () => {
             label: 'Confirmar'
         },
         accept: () => {
+            router.put(route('invoices.sendNetsuite', formNetsuite.value.id), formNetsuite.value, {
+                onSuccess: () => {
+                    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Factura actualizada', life: 3000 })
+                    visible_form.value = false
+                }
+            })
             toast.add({ severity: 'info', summary: 'Confirmado', detail: 'Has aceptado', life: 3000 });
         },
         reject: () => {
-            toast.add({ severity: 'error', summary: 'Rechazado', detail: 'Se rechazó la acción', life: 3000 });
+            toast.add({ severity: 'warn', summary: 'Rechazado', detail: 'Se canceló el envío', life: 3000 });
         }
     });
 };
@@ -339,31 +345,45 @@ const resetFiltros = () => {
     selectedClase.value = null;
 }
 
-// onMounted(() => {
-//     loadInvoices();
-// });
+const modalFormulario = (invoice) => {
+    console.log(invoice);
+    console.log("   categoria: ",invoice.invoice_category_id);
+    console.log("   ubicacion: ",invoice.invoice_location_id);
+    console.log("   departamento: ",invoice.invoice_department_id);
+    formNetsuite.value = {
+        id: invoice.id,
+        invoice_category_id: invoice.invoice_category_id,
+        invoice_location_id: invoice.invoice_location_id,
+        invoice_department_id: invoice.invoice_department_id,
+        invoice_class_id: invoice.invoice_class_id,
+        invoice_term_id: invoice.invoice_term_id,
+        invoice_operation_type_id: invoice.invoice_operation_type_id,
+        invoice_order_no: invoice.invoice_order_no,
+        invoice_accounting_id: invoice.invoice_accounting_id,
+        invoice_article_id: invoice.invoice_article_id,
+        invoice_exclusion_category_id: invoice.invoice_exclusion_category_id,
+        invoice_provider_type: invoice.invoice_provider_type,
+        notes: invoice.notes,
+        order_id: invoice.order_id,
+    }
+    visible_form.value = true;
+}
 
-// watch(dates, (val) => {
-//     const [start, end] = val ?? [];
-//     if (start && end) {
-//         const formatDate = (d) => {
-//             const date = new Date(d);
-//             const year = date.getFullYear();
-//             const month = String(date.getMonth() + 1).padStart(2, "0");
-//             const day = String(date.getDate()).padStart(2, "0");
-//             return `${year}-${month}-${day}`;
-//         };
-
-//         filters.value.trandate = {
-//             value: [formatDate(start), formatDate(end)],
-//             matchMode: FilterMatchMode.BETWEEN
-//         };
-//     } else {
-//         delete filters.value.trandate;
-//     }
-// }, { immediate: true });
-
-// console.log(props);
+const formNetsuite = ref({
+    id: null,
+    invoice_category_id: null,
+    invoice_location_id: null,
+    invoice_department_id: null,
+    invoice_class_id: null,
+    invoice_term_id: null,
+    invoice_operation_type_id: null,
+    invoice_accounting_id: null,
+    invoice_article_id: null,
+    invoice_exclusion_category_id: null,
+    invoice_provider_type: null,
+    notes: '',
+    order_id: ''
+})
 
 </script>
 
@@ -476,7 +496,7 @@ const resetFiltros = () => {
                                 rounded
                                 class="mr-2"
                                 severity="success"
-                                @click="visible_form = true"
+                                @click="modalFormulario(slotProps.data)"
                             />
                             <Button
                                 v-if="slotProps.data.reseteable"
@@ -487,7 +507,7 @@ const resetFiltros = () => {
                                 rounded
                                 class="mr-2"
                                 severity="help"
-                                @click="visible_form = true"
+                                @click="modalFormulario(slotProps.data)"
                             />
                         </template>
 
@@ -525,6 +545,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="invoice_category_id" class="font-bold block mb-2">Categoría</label>
                 <Select 
+                    v-model="formNetsuite.invoice_category_id"
                     :options="props.categories"
                     optionLabel="name"
                     optionValue="id"
@@ -536,6 +557,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Ubicación</label>
                 <Select 
+                    v-model="formNetsuite.invoice_location_id"
                     :options="props.locations"
                     optionLabel="name"
                     optionValue="id"
@@ -547,6 +569,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Departamento</label>
                 <Select 
+                    v-model="formNetsuite.invoice_department_id"
                     :options="props.departments"
                     optionLabel="name"
                     optionValue="id"
@@ -558,6 +581,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Clase</label>
                 <Select 
+                    v-model="formNetsuite.invoice_class_id"
                     :options="props.classes"
                     optionLabel="name"
                     optionValue="id"
@@ -569,6 +593,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Término</label>
                 <Select 
+                    v-model="formNetsuite.invoice_term_id"
                     :options="props.terms"
                     optionLabel="name"
                     optionValue="id"
@@ -580,6 +605,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Tipo de operación</label>
                 <Select 
+                    v-model="formNetsuite.invoice_operation_type_id"
                     :options="props.operationTypes"
                     optionLabel="name"
                     optionValue="id"
@@ -591,11 +617,12 @@ const resetFiltros = () => {
             <Divider class="col-span-4"/>
             <div class="col-span-4 md:col-span-1">
                 <label for="" class="font-bold block mb-2">No de Orden</label>
-                <InputText inputId="" fluid />
+                <InputText v-model="formNetsuite.order_id" inputId="order_id" fluid />
             </div>
             <div class="col-span-4 md:col-span-3">
                 <label for="" class="font-bold block mb-2">Importación</label>
                 <Select 
+                    v-model="formNetsuite.invoice_accounting_id"
                     :options="props.accountingLists"
                     optionLabel="name"
                     optionValue="id"
@@ -606,6 +633,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Artículo</label>
                 <Select 
+                    v-model="formNetsuite.invoice_article_id"
                     :options="props.articles"
                     optionLabel="name"
                     optionValue="id"
@@ -616,6 +644,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Exclusión</label>
                 <Select 
+                    v-model="formNetsuite.invoice_exclusion_category_id"
                     :options="props.exclusions"
                     optionLabel="name"
                     optionValue="id"
@@ -626,6 +655,7 @@ const resetFiltros = () => {
             <div class="col-span-4 md:col-span-2">
                 <label for="" class="font-bold block mb-2">Proveedor genérico</label>
                 <Select 
+                    v-model="formNetsuite.invoice_provider_type"
                     :options="provider_type"
                     optionLabel="name"
                     optionValue="id"
@@ -635,12 +665,12 @@ const resetFiltros = () => {
             </div>
             <div class="col-span-4">
                 <label for="" class="font-bold block mb-2">Notas</label>
-                <Textarea rows="5" inputId="" fluid />
+                <Textarea v-model="formNetsuite.notes" rows="5" inputId="notes" fluid />
             </div>
         </div>
         <div class="flex justify-end gap-2">
             <Button type="button" icon="pi pi-times" label="Cancelar" severity="secondary" @click="visible_form = false"></Button>
-            <Button type="button" icon="pi pi-save" label="Guardar" @click="sendToNetSuite(slotProps.data)"></Button>
+            <Button type="button" icon="pi pi-save" label="Guardar" @click="sendToNetSuite()"></Button>
         </div>
     </Dialog>
     

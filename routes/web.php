@@ -5,6 +5,7 @@ use App\Http\Controllers\InvoiceArticlesController;
 use App\Http\Controllers\InvoiceCategoryController;
 use App\Http\Controllers\InvoiceCompanyController;
 use App\Http\Controllers\InvoiceLocationController;
+use App\Http\Controllers\InvoiceSatController;
 use App\Http\Controllers\InvoiceTermController;
 use App\Http\Controllers\PlantaController;
 use App\Models\InvoiceCompany;
@@ -84,6 +85,8 @@ Route::middleware([
     Route::post('/terminos-pago', [InvoiceTermController::class, 'store'])->name('terminos-pago.store');
     Route::delete('/terminos-pago/{invoiceTerm}', [InvoiceTermController::class,'destroy'])->name('terminos-pago.destroy');
     Route::put('/terminos-pago/{invoiceTerm}', [InvoiceTermController::class,'update'])->name('terminos-pago.update');
+
+    Route::get('/invoices/{invoiceSat}', [InvoiceSatController::class, 'sendNetsuite'])->name('invoices.send-netsuite');
 });
 
 

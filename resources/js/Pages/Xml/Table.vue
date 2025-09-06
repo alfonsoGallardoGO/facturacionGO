@@ -40,9 +40,9 @@ onMounted(async () => {
 <template>
     <AppLayout title="Tabla xml">
         <div class="card">
-            <DataTable :value="props.invoices" tableStyle="min-width: 50rem">
-                <Column field="id" header="ID" />
-                <Column field="estatus" header="Estatus" />
+            <DataTable :value="products" tableStyle="min-width: 50rem">
+                <Column field="acciones" header="Acciones" />
+                <Column field="estatus_v" header="Estatus" />
                 <Column field="empresa" header="Empresa" />
                 <Column field="uuid" header="Uuid" />
                 <Column field="emisor_rfc" header="Emisor RFC" />
@@ -74,6 +74,7 @@ onMounted(async () => {
                 />
                 <Column field="tipo_operacion" header="Tipo de operación" />
                 <Column field="tipo" header="Tipo" />
+                <Column field="estatus" header="Estado" />
             </DataTable>
         </div>
     </AppLayout>
